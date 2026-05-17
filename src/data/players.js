@@ -42,8 +42,8 @@ const getLocalPlayers = () => {
     { id: 17, name: 'Benjamin Tahirović', positions: ['CM', 'CDM'], primaryPosition: 'MID', country: 'Bośnia i Hercegowina', flag: '🇧🇦', image: null, club: 'Brøndby IF' },
     { id: 18, name: 'Amar Memić', positions: ['CM'], primaryPosition: 'MID', country: 'Bośnia i Hercegowina', flag: '🇧🇦', image: null, club: 'Viktoria Pilzno' },
     { id: 19, name: 'Armin Gigović', positions: ['CM'], primaryPosition: 'MID', country: 'Bośnia i Hercegowina', flag: '🇧🇦', image: null, club: 'BSC Young Boys' },
-    { id: 20, name: 'Kerim Alajbegović', positions: ['CAM', 'LW'], primaryPosition: 'MID', country: 'Bośnia i Hercegowina', flag: '🇧🇦', image: null, club: 'Red Bull Salzburg' },
-    { id: 21, name: 'Esmir Bajraktarević', positions: ['CAM', 'RW'], primaryPosition: 'MID', country: 'Bośnia i Hercegowina', flag: '🇧🇦', image: null, club: 'PSV Eindhoven' },
+    { id: 20, name: 'Kerim Alajbegović', positions: ['CAM', 'RAM', 'LAM', 'LW'], primaryPosition: 'MID', country: 'Bośnia i Hercegowina', flag: '🇧🇦', image: null, club: 'Red Bull Salzburg' },
+    { id: 21, name: 'Esmir Bajraktarević', positions: ['CAM', 'RAM', 'LAM', 'RW'], primaryPosition: 'MID', country: 'Bośnia i Hercegowina', flag: '🇧🇦', image: null, club: 'PSV Eindhoven' },
     // Napastnicy
     { id: 22, name: 'Ermedin Demirović', positions: ['ST'], primaryPosition: 'FWD', country: 'Bośnia i Hercegowina', flag: '🇧🇦', image: null, club: 'VfB Stuttgart' },
     { id: 23, name: 'Jovo Lukić', positions: ['ST'], primaryPosition: 'FWD', country: 'Bośnia i Hercegowina', flag: '🇧🇦', image: null, club: 'Universitatea Kluż' },
@@ -72,7 +72,7 @@ const getLocalPlayers = () => {
 { id: 38, name: 'Carl-Fred Sainté', positions: ['CM'], primaryPosition: 'MID', country: 'Haiti', flag: '🇭🇹', image: null, club: 'El Paso Locomotive' },
 { id: 39, name: 'Leverton Pierre', positions: ['CM'], primaryPosition: 'MID', country: 'Haiti', flag: '🇭🇹', image: null, club: 'FC Vizela' },
 { id: 40, name: 'Danley Jean Jacques', positions: ['CM', 'CDM'], primaryPosition: 'MID', country: 'Haiti', flag: '🇭🇹', image: null, club: 'Philadelphia Union' },
-{ id: 41, name: 'Jean-Ricner Bellegarde', positions: ['CM', 'CAM'], primaryPosition: 'MID', country: 'Haiti', flag: '🇭🇹', image: null, club: 'Wolverhampton Wanderers' },
+{ id: 41, name: 'Jean-Ricner Bellegarde', positions: ['CM', 'CAM', 'RAM', 'LAM'], primaryPosition: 'MID', country: 'Haiti', flag: '🇭🇹', image: null, club: 'Wolverhampton Wanderers' },
 { id: 42, name: 'Woodensky Pierre', positions: ['CM'], primaryPosition: 'MID', country: 'Haiti', flag: '🇭🇹', image: null, club: 'Violette AC' },
 { id: 43, name: 'Dominique Simon', positions: ['CM'], primaryPosition: 'MID', country: 'Haiti', flag: '🇭🇹', image: null, club: 'Tatran Preszów' },
 
@@ -107,7 +107,7 @@ const getLocalPlayers = () => {
 
 // Pomocnicy
 { id: 64, name: 'Seko Fofana', positions: ['CM', 'CDM'], primaryPosition: 'MID', country: 'Wybrzeże Kości Słoniowej', flag: '🇨🇮', image: null, club: 'FC Porto' },
-{ id: 65, name: 'Parfait Guiagon', positions: ['CAM', 'RW'], primaryPosition: 'MID', country: 'Wybrzeże Kości Słoniowej', flag: '🇨🇮', image: null, club: 'Royal Charleroi' },
+{ id: 65, name: 'Parfait Guiagon', positions: ['CAM', 'RAM', 'LAM', 'RW'], primaryPosition: 'MID', country: 'Wybrzeże Kości Słoniowej', flag: '🇨🇮', image: null, club: 'Royal Charleroi' },
 { id: 66, name: 'Christ Inao Oulaï', positions: ['CM'], primaryPosition: 'MID', country: 'Wybrzeże Kości Słoniowej', flag: '🇨🇮', image: null, club: 'Trabzonspor' },
 { id: 67, name: 'Franck Kessié', positions: ['CM', 'CDM'], primaryPosition: 'MID', country: 'Wybrzeże Kości Słoniowej', flag: '🇨🇮', image: null, club: 'Al-Ahli' },
 { id: 68, name: 'Ibrahim Sangaré', positions: ['CDM'], primaryPosition: 'MID', country: 'Wybrzeże Kości Słoniowej', flag: '🇨🇮', image: null, club: 'Nottingham Forest' },
@@ -116,7 +116,7 @@ const getLocalPlayers = () => {
 // Napastnicy
 { id: 70, name: 'Simon Adingra', positions: ['LW', 'RW'], primaryPosition: 'FWD', country: 'Wybrzeże Kości Słoniowej', flag: '🇨🇮', image: null, club: 'AS Monaco' },
 { id: 71, name: 'Ange-Yoan Bonny', positions: ['ST'], primaryPosition: 'FWD', country: 'Wybrzeże Kości Słoniowej', flag: '🇨🇮', image: null, club: 'Inter Mediolan' },
-{ id: 72, name: 'Amad Diallo', positions: ['RW', 'CAM'], primaryPosition: 'FWD', country: 'Wybrzeże Kości Słoniowej', flag: '🇨🇮', image: null, club: 'Manchester United' },
+{ id: 72, name: 'Amad Diallo', positions: ['RW', 'CAM', 'RAM', 'LAM'], primaryPosition: 'FWD', country: 'Wybrzeże Kości Słoniowej', flag: '🇨🇮', image: null, club: 'Manchester United' },
 { id: 73, name: 'Oumar Diakité', positions: ['ST'], primaryPosition: 'FWD', country: 'Wybrzeże Kości Słoniowej', flag: '🇨🇮', image: null, club: 'Cercle Brugge' },
 { id: 74, name: 'Yan Diomande', positions: ['LW'], primaryPosition: 'FWD', country: 'Wybrzeże Kości Słoniowej', flag: '🇨🇮', image: null, club: 'RB Leipzig' },
 { id: 75, name: 'Evann Guessand', positions: ['ST', 'RW'], primaryPosition: 'FWD', country: 'Wybrzeże Kości Słoniowej', flag: '🇨🇮', image: null, club: 'Crystal Palace' },
@@ -143,12 +143,12 @@ const getLocalPlayers = () => {
 // Pomocnicy
 { id: 90, name: 'Wataru Endō', positions: ['CDM', 'CM'], primaryPosition: 'MID', country: 'Japonia', flag: '🇯🇵', image: null, club: 'Liverpool' },
 { id: 91, name: 'Junya Itō', positions: ['RW'], primaryPosition: 'MID', country: 'Japonia', flag: '🇯🇵', image: null, club: 'KRC Genk' },
-{ id: 92, name: 'Daichi Kamada', positions: ['CAM', 'CM'], primaryPosition: 'MID', country: 'Japonia', flag: '🇯🇵', image: null, club: 'Crystal Palace' },
+{ id: 92, name: 'Daichi Kamada', positions: ['CAM', 'RAM', 'LAM', 'CM'], primaryPosition: 'MID', country: 'Japonia', flag: '🇯🇵', image: null, club: 'Crystal Palace' },
 { id: 93, name: 'Ritsu Dōan', positions: ['RW', 'LW'], primaryPosition: 'MID', country: 'Japonia', flag: '🇯🇵', image: null, club: 'Eintracht Frankfurt' },
 { id: 94, name: 'Ao Tanaka', positions: ['CM', 'CDM'], primaryPosition: 'MID', country: 'Japonia', flag: '🇯🇵', image: null, club: 'Leeds United' },
 { id: 95, name: 'Keito Nakamura', positions: ['LW'], primaryPosition: 'MID', country: 'Japonia', flag: '🇯🇵', image: null, club: 'Stade de Reims' },
 { id: 96, name: 'Kaishū Sano', positions: ['CDM'], primaryPosition: 'MID', country: 'Japonia', flag: '🇯🇵', image: null, club: '1. FSV Mainz 05' },
-{ id: 97, name: 'Takefusa Kubo', positions: ['RW', 'CAM'], primaryPosition: 'MID', country: 'Japonia', flag: '🇯🇵', image: null, club: 'Real Sociedad' },
+{ id: 97, name: 'Takefusa Kubo', positions: ['RW', 'CAM', 'RAM', 'LAM'], primaryPosition: 'MID', country: 'Japonia', flag: '🇯🇵', image: null, club: 'Real Sociedad' },
 
 // Napastnicy
 { id: 98, name: 'Kōki Ogawa', positions: ['ST'], primaryPosition: 'FWD', country: 'Japonia', flag: '🇯🇵', image: null, club: 'NEC Nijmegen' },
@@ -179,7 +179,7 @@ const getLocalPlayers = () => {
 // Pomocnicy
 { id: 117, name: 'Taha Ali', positions: ['RW', 'LW'], primaryPosition: 'MID', country: 'Szwecja', flag: '🇸🇪', image: null, club: 'Malmö FF' },
 { id: 118, name: 'Yasin Ayari', positions: ['CM'], primaryPosition: 'MID', country: 'Szwecja', flag: '🇸🇪', image: null, club: 'Brighton & Hove Albion' },
-{ id: 119, name: 'Lucas Bergvall', positions: ['CM', 'CAM'], primaryPosition: 'MID', country: 'Szwecja', flag: '🇸🇪', image: null, club: 'Tottenham Hotspur' },
+{ id: 119, name: 'Lucas Bergvall', positions: ['CM', 'CAM', 'RAM', 'LAM'], primaryPosition: 'MID', country: 'Szwecja', flag: '🇸🇪', image: null, club: 'Tottenham Hotspur' },
 { id: 120, name: 'Jesper Karlström', positions: ['CDM'], primaryPosition: 'MID', country: 'Szwecja', flag: '🇸🇪', image: null, club: 'Udinese Calcio' },
 { id: 121, name: 'Ken Sema', positions: ['LM', 'LW'], primaryPosition: 'MID', country: 'Szwecja', flag: '🇸🇪', image: null, club: 'Pafos FC' },
 { id: 122, name: 'Mattias Svanberg', positions: ['CM'], primaryPosition: 'MID', country: 'Szwecja', flag: '🇸🇪', image: null, club: 'VfL Wolfsburg' },
@@ -191,7 +191,7 @@ const getLocalPlayers = () => {
 { id: 126, name: 'Viktor Gyökeres', positions: ['ST'], primaryPosition: 'FWD', country: 'Szwecja', flag: '🇸🇪', image: null, club: 'Arsenal' },
 { id: 127, name: 'Alexander Isak', positions: ['ST'], primaryPosition: 'FWD', country: 'Szwecja', flag: '🇸🇪', image: null, club: 'Liverpool' },
 { id: 128, name: 'Gustaf Nilsson', positions: ['ST'], primaryPosition: 'FWD', country: 'Szwecja', flag: '🇸🇪', image: null, club: 'Club Brugge' },
-{ id: 129, name: 'Benjamin Nygren', positions: ['RW', 'CAM'], primaryPosition: 'FWD', country: 'Szwecja', flag: '🇸🇪', image: null, club: 'Celtic' },
+{ id: 129, name: 'Benjamin Nygren', positions: ['RW', 'CAM', 'RAM', 'LAM'], primaryPosition: 'FWD', country: 'Szwecja', flag: '🇸🇪', image: null, club: 'Celtic' },
 
    // ==================== TUNEZJA ====================
 // Bramkarze
@@ -214,10 +214,10 @@ const getLocalPlayers = () => {
 { id: 142, name: 'Ellyes Skhiri', positions: ['CDM', 'CM'], primaryPosition: 'MID', country: 'Tunezja', flag: '🇹🇳', image: null, club: 'Eintracht Frankfurt' },
 { id: 143, name: 'Mohamed Belhadj Mahmoud', positions: ['CM'], primaryPosition: 'MID', country: 'Tunezja', flag: '🇹🇳', image: null, club: 'FC Lugano' },
 { id: 144, name: 'Rani Khedira', positions: ['CDM'], primaryPosition: 'MID', country: 'Tunezja', flag: '🇹🇳', image: null, club: 'Union Berlin' },
-{ id: 145, name: 'Hannibal Mejbri', positions: ['CAM', 'CM'], primaryPosition: 'MID', country: 'Tunezja', flag: '🇹🇳', image: null, club: 'Burnley' },
-{ id: 146, name: 'Anis Ben Slimane', positions: ['CM', 'CAM'], primaryPosition: 'MID', country: 'Tunezja', flag: '🇹🇳', image: null, club: 'Norwich City' },
+{ id: 145, name: 'Hannibal Mejbri', positions: ['CAM', 'RAM', 'LAM', 'CM'], primaryPosition: 'MID', country: 'Tunezja', flag: '🇹🇳', image: null, club: 'Burnley' },
+{ id: 146, name: 'Anis Ben Slimane', positions: ['CM', 'CAM', 'RAM', 'LAM'], primaryPosition: 'MID', country: 'Tunezja', flag: '🇹🇳', image: null, club: 'Norwich City' },
 { id: 147, name: 'Mortadha Ben Ouanes', positions: ['LM', 'LW'], primaryPosition: 'MID', country: 'Tunezja', flag: '🇹🇳', image: null, club: 'Kasımpaşa SK' },
-{ id: 148, name: 'Ismaël Gharbi', positions: ['CAM', 'LW'], primaryPosition: 'MID', country: 'Tunezja', flag: '🇹🇳', image: null, club: 'FC Augsburg' },
+{ id: 148, name: 'Ismaël Gharbi', positions: ['CAM', 'RAM', 'LAM', 'LW'], primaryPosition: 'MID', country: 'Tunezja', flag: '🇹🇳', image: null, club: 'FC Augsburg' },
 
 // Napastnicy
 { id: 149, name: 'Khalil Ayari', positions: ['ST'], primaryPosition: 'FWD', country: 'Tunezja', flag: '🇹🇳', image: null, club: 'Paris Saint-Germain U21' },
@@ -246,15 +246,15 @@ const getLocalPlayers = () => {
 { id: 167, name: 'Arthur Theate', positions: ['CB', 'LB'], primaryPosition: 'DEF', country: 'Belgia', flag: '🇧🇪', image: null, club: 'Eintracht Frankfurt' },
 
 // Pomocnicy
-{ id: 168, name: 'Kevin De Bruyne', positions: ['CM', 'CAM'], primaryPosition: 'MID', country: 'Belgia', flag: '🇧🇪', image: null, club: 'SSC Napoli' },
+{ id: 168, name: 'Kevin De Bruyne', positions: ['CM', 'CAM', 'RAM', 'LAM'], primaryPosition: 'MID', country: 'Belgia', flag: '🇧🇪', image: null, club: 'SSC Napoli' },
 { id: 169, name: 'Amadou Onana', positions: ['CDM', 'CM'], primaryPosition: 'MID', country: 'Belgia', flag: '🇧🇪', image: null, club: 'Aston Villa' },
 { id: 170, name: 'Nicolas Raskin', positions: ['CM', 'CDM'], primaryPosition: 'MID', country: 'Belgia', flag: '🇧🇪', image: null, club: 'Rangers' },
 { id: 171, name: 'Youri Tielemans', positions: ['CM'], primaryPosition: 'MID', country: 'Belgia', flag: '🇧🇪', image: null, club: 'Aston Villa' },
-{ id: 172, name: 'Hans Vanaken', positions: ['CAM', 'CM'], primaryPosition: 'MID', country: 'Belgia', flag: '🇧🇪', image: null, club: 'Club Brugge' },
+{ id: 172, name: 'Hans Vanaken', positions: ['CAM', 'RAM', 'LAM', 'CM'], primaryPosition: 'MID', country: 'Belgia', flag: '🇧🇪', image: null, club: 'Club Brugge' },
 { id: 173, name: 'Axel Witsel', positions: ['CDM', 'CM'], primaryPosition: 'MID', country: 'Belgia', flag: '🇧🇪', image: null, club: 'Girona FC' },
 
 // Napastnicy
-{ id: 174, name: 'Charles De Ketelaere', positions: ['SS', 'CAM'], primaryPosition: 'FWD', country: 'Belgia', flag: '🇧🇪', image: null, club: 'Atalanta BC' },
+{ id: 174, name: 'Charles De Ketelaere', positions: ['SS', 'CAM', 'RAM', 'LAM'], primaryPosition: 'FWD', country: 'Belgia', flag: '🇧🇪', image: null, club: 'Atalanta BC' },
 { id: 175, name: 'Jérémy Doku', positions: ['LW', 'RW'], primaryPosition: 'FWD', country: 'Belgia', flag: '🇧🇪', image: null, club: 'Manchester City' },
 { id: 176, name: 'Matias Fernandez-Pardo', positions: ['RW', 'LW'], primaryPosition: 'FWD', country: 'Belgia', flag: '🇧🇪', image: null, club: 'Lille OSC' },
 { id: 177, name: 'Romelu Lukaku', positions: ['ST'], primaryPosition: 'FWD', country: 'Belgia', flag: '🇧🇪', image: null, club: 'SSC Napoli' },
@@ -286,10 +286,10 @@ const getLocalPlayers = () => {
 { id: 195, name: 'Joe Bell', positions: ['CM', 'CDM'], primaryPosition: 'MID', country: 'Nowa Zelandia', flag: '🇳🇿', image: null, club: 'Viking FK' },
 { id: 196, name: 'Matthew Garbett', positions: ['CM'], primaryPosition: 'MID', country: 'Nowa Zelandia', flag: '🇳🇿', image: null, club: 'Peterborough United' },
 { id: 197, name: 'Marko Stamenic', positions: ['CM', 'CDM'], primaryPosition: 'MID', country: 'Nowa Zelandia', flag: '🇳🇿', image: null, club: 'Swansea City' },
-{ id: 198, name: 'Sarpreet Singh', positions: ['CAM', 'CM'], primaryPosition: 'MID', country: 'Nowa Zelandia', flag: '🇳🇿', image: null, club: 'Wellington Phoenix' },
+{ id: 198, name: 'Sarpreet Singh', positions: ['CAM', 'RAM', 'LAM', 'CM'], primaryPosition: 'MID', country: 'Nowa Zelandia', flag: '🇳🇿', image: null, club: 'Wellington Phoenix' },
 { id: 199, name: 'Alex Rufer', positions: ['CM', 'CDM'], primaryPosition: 'MID', country: 'Nowa Zelandia', flag: '🇳🇿', image: null, club: 'Wellington Phoenix' },
-{ id: 200, name: 'Ben Old', positions: ['CAM', 'LM'], primaryPosition: 'MID', country: 'Nowa Zelandia', flag: '🇳🇿', image: null, club: 'AS Saint-Étienne' },
-{ id: 201, name: 'Callum McCowatt', positions: ['CAM', 'RW'], primaryPosition: 'MID', country: 'Nowa Zelandia', flag: '🇳🇿', image: null, club: 'Silkeborg IF' },
+{ id: 200, name: 'Ben Old', positions: ['CAM', 'RAM', 'LAM', 'LM'], primaryPosition: 'MID', country: 'Nowa Zelandia', flag: '🇳🇿', image: null, club: 'AS Saint-Étienne' },
+{ id: 201, name: 'Callum McCowatt', positions: ['CAM', 'RAM', 'LAM', 'RW'], primaryPosition: 'MID', country: 'Nowa Zelandia', flag: '🇳🇿', image: null, club: 'Silkeborg IF' },
 { id: 202, name: 'Ryan Thomas', positions: ['CM'], primaryPosition: 'MID', country: 'Nowa Zelandia', flag: '🇳🇿', image: null, club: 'PEC Zwolle' },
 { id: 203, name: 'Lachlan Bayliss', positions: ['CM'], primaryPosition: 'MID', country: 'Nowa Zelandia', flag: '🇳🇿', image: null, club: 'Newcastle Jets' },
 
@@ -325,14 +325,14 @@ const getLocalPlayers = () => {
 { id: 224, name: 'Warren Zaïre-Emery', positions: ['CM'], primaryPosition: 'MID', country: 'Francja', flag: '🇫🇷', image: null, club: 'Paris Saint-Germain' },
 
 // Napastnicy
-{ id: 225, name: 'Maghnes Akliouche', positions: ['RW', 'CAM'], primaryPosition: 'FWD', country: 'Francja', flag: '🇫🇷', image: null, club: 'AS Monaco' },
+{ id: 225, name: 'Maghnes Akliouche', positions: ['RW', 'CAM', 'RAM', 'LAM'], primaryPosition: 'FWD', country: 'Francja', flag: '🇫🇷', image: null, club: 'AS Monaco' },
 { id: 226, name: 'Bradley Barcola', positions: ['LW'], primaryPosition: 'FWD', country: 'Francja', flag: '🇫🇷', image: null, club: 'Paris Saint-Germain' },
-{ id: 227, name: 'Rayan Cherki', positions: ['CAM', 'RW'], primaryPosition: 'FWD', country: 'Francja', flag: '🇫🇷', image: null, club: 'Manchester City' },
+{ id: 227, name: 'Rayan Cherki', positions: ['CAM', 'RAM', 'LAM', 'RW'], primaryPosition: 'FWD', country: 'Francja', flag: '🇫🇷', image: null, club: 'Manchester City' },
 { id: 228, name: 'Ousmane Dembélé', positions: ['RW', 'LW'], primaryPosition: 'FWD', country: 'Francja', flag: '🇫🇷', image: null, club: 'Paris Saint-Germain' },
-{ id: 229, name: 'Désiré Doué', positions: ['LW', 'CAM'], primaryPosition: 'FWD', country: 'Francja', flag: '🇫🇷', image: null, club: 'Paris Saint-Germain' },
+{ id: 229, name: 'Désiré Doué', positions: ['LW', 'CAM', 'RAM', 'LAM'], primaryPosition: 'FWD', country: 'Francja', flag: '🇫🇷', image: null, club: 'Paris Saint-Germain' },
 { id: 230, name: 'Jean-Philippe Mateta', positions: ['ST'], primaryPosition: 'FWD', country: 'Francja', flag: '🇫🇷', image: null, club: 'Crystal Palace' },
 { id: 231, name: 'Kylian Mbappé', positions: ['ST', 'LW'], primaryPosition: 'FWD', country: 'Francja', flag: '🇫🇷', image: null, club: 'Real Madryt' },
-{ id: 232, name: 'Michael Olise', positions: ['RW', 'CAM'], primaryPosition: 'FWD', country: 'Francja', flag: '🇫🇷', image: null, club: 'Bayern Monachium' },
+{ id: 232, name: 'Michael Olise', positions: ['RW', 'CAM', 'RAM', 'LAM'], primaryPosition: 'FWD', country: 'Francja', flag: '🇫🇷', image: null, club: 'Bayern Monachium' },
 { id: 233, name: 'Marcus Thuram', positions: ['ST', 'LW'], primaryPosition: 'FWD', country: 'Francja', flag: '🇫🇷', image: null, club: 'Inter Mediolan' }
   ];
 };

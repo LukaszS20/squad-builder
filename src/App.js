@@ -7,6 +7,9 @@ import { loadPlayers, PLAYERS } from './data/players';
 import { FORMATIONS } from './data/formations';
 import SquadsModal from './components/SquadsModal';
 import FormationsModal from './components/FormationsModal';
+import { auth } from './firebase';
+import RefereeMode from './components/RefereeMode';
+import RankingModal from './components/RankingModal';
 
 const STORAGE_KEY = 'wc_squad_builder';
 
@@ -20,13 +23,25 @@ export default function App() {
   const [loadProgress, setLoadProgress] = useState({ current: 0, total: 0, team: '' });
   const [isSquadsModalOpen, setIsSquadsModalOpen] = useState(false);
   const [isFormationsModalOpen, setIsFormationsModalOpen] = useState(false);
+  const [isRefereeModeOpen, setIsRefereeModeOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isRankingOpen, setIsRankingOpen] = useState(false);
 
+ 
   const handleLoadSquad = (loadedSquad, loadedFormation) => {
     setSquad(loadedSquad);
     setFormation(loadedFormation);
     setSelectingSlot(null);
     setSelectedSlotLabel('');
   };
+
+  // Nasłuchuj użytkownika
+useEffect(() => {
+  const unsubscribe = auth.onAuthStateChanged((user) => {
+    setCurrentUser(user);
+  });
+  return () => unsubscribe();
+}, []);
 
   useEffect(() => {
     const init = async () => {
@@ -140,6 +155,24 @@ return (
           <span>▼</span>
         </button>
 
+        {/* W headerze, obok przycisku składów */}
+        <button
+          onClick={() => setIsRefereeModeOpen(true)}
+          className="px-3 py-2 rounded-lg text-sm font-bold bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-all flex items-center gap-2"
+        >
+          <span>⚖️</span>
+          <span className="hidden sm:inline">Sędziuj</span>
+      </button>
+
+         {/* Do otwierania rankingu składów i historii meczów */}
+        <button
+         onClick={() => setIsRankingOpen(true)}
+        className="px-3 py-2 rounded-lg text-sm font-bold bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-all flex items-center gap-2"
+        >
+         <span>🏆</span>
+         <span className="hidden sm:inline">Ranking</span>
+      </button>
+
         {/* Prawa strona - przycisk składów */}
         <button
           onClick={() => setIsSquadsModalOpen(true)}
@@ -183,6 +216,19 @@ return (
         currentSquad={squad}
         currentFormation={formation}
         onLoadSquad={handleLoadSquad}
+      />
+
+        {/* Modal tryb sędziowski */}
+       <RefereeMode
+       isOpen={isRefereeModeOpen}
+       onClose={() => setIsRefereeModeOpen(false)}
+       currentUser={currentUser}
+      />
+
+        {/* Modal na końcu JSX */}
+      <RankingModal
+       isOpen={isRankingOpen}
+       onClose={() => setIsRankingOpen(false)}
       />
 
       {/* Modal wyboru formacji */}

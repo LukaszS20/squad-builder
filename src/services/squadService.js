@@ -11,10 +11,12 @@ import {
   orderBy,
   limit,
   serverTimestamp,
-  where
+  where,
+  getDoc
 } from 'firebase/firestore';
 
 const SQUADS_COLLECTION = 'squads';
+const MATCHES_COLLECTION = 'matches';
 
 // Zapisz nowy skład (z ID użytkownika)
 export const saveSquad = async (squadData) => {
@@ -123,5 +125,105 @@ export const likeSquad = async (id, currentLikes) => {
   } catch (error) {
     console.error('Błąd like:', error);
     return false;
+  }
+};
+
+// ZAPISZ WYNIK MECZU
+export const saveMatchResult = async (matchData) => {
+  try {
+    const user = auth.currentUser;
+    const match = {
+      ...matchData,
+      createdAt: serverTimestamp(),
+      refereeId: user?.uid || 'anonymous',
+      refereeName: user?.email || 'Anonim'
+    };
+    const docRef = await addDoc(collection(db, MATCHES_COLLECTION), match);
+    return { id: docRef.id, ...match };
+  } catch (error) {
+    console.error('Błąd zapisu wyniku:', error);
+    throw error;
+  }
+};
+
+// POBIERZ HISTORIĘ MECZÓW
+export const getMatchHistory = async (limitCount = 50) => {
+  try {
+    const q = query(
+      collection(db, MATCHES_COLLECTION),
+      orderBy('createdAt', 'desc'),
+      limit(limitCount)
+    );
+    const querySnapshot = await getDocs(q);
+    const matches = [];
+    querySnapshot.forEach((doc) => {
+      matches.push({ id: doc.id, ...doc.data() });
+    });
+    return matches;
+  } catch (error) {
+    console.error('Błąd pobierania historii:', error);
+    return [];
+  }
+};
+
+// POBRZE RANKING SKŁADÓW
+export const getSquadRanking = async () => {
+  try {
+    const q = query(
+      collection(db, SQUADS_COLLECTION),
+      orderBy('stats.wins', 'desc'),
+      limit(100)
+    );
+    const querySnapshot = await getDocs(q);
+    const squads = [];
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      squads.push({ 
+        id: doc.id, 
+        ...data,
+        winRate: data.stats?.matches > 0 
+          ? Math.round((data.stats.wins / data.stats.matches) * 100) 
+          : 0
+      });
+    });
+    // Sortuj po liczbie wygranych
+    return squads.sort((a, b) => (b.stats?.wins || 0) - (a.stats?.wins || 0));
+  } catch (error) {
+    console.error('Błąd pobierania rankingu:', error);
+    return [];
+  }
+};
+
+// W squadService.js, w updateSquadStats dodaj:
+export const updateSquadStats = async (squadId, isWin, isDraw) => {
+  try {
+    console.log('📊 updateSquadStats wywołane:', { squadId, isWin, isDraw });
+    
+    const squadRef = doc(db, SQUADS_COLLECTION, squadId);
+    const squadSnap = await getDoc(squadRef);
+    
+    console.log('Czy skład istnieje?', squadSnap.exists());
+    
+    if (squadSnap.exists()) {
+      const currentStats = squadSnap.data().stats || { wins: 0, draws: 0, losses: 0, matches: 0 };
+      console.log('Aktualne statystyki:', currentStats);
+      
+      const newStats = {
+        wins: currentStats.wins + (isWin ? 1 : 0),
+        draws: currentStats.draws + (isDraw ? 1 : 0),
+        losses: currentStats.losses + (!isWin && !isDraw ? 1 : 0),
+        matches: currentStats.matches + 1
+      };
+      
+      console.log('Nowe statystyki:', newStats);
+      await updateDoc(squadRef, { stats: newStats });
+      console.log('✅ Statystyki zaktualizowane');
+      return newStats;
+    } else {
+      console.error('❌ Nie znaleziono składu o ID:', squadId);
+    }
+  } catch (error) {
+    console.error('❌ Błąd aktualizacji statystyk:', error);
+    throw error;
   }
 };
