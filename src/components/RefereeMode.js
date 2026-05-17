@@ -1,6 +1,8 @@
 // src/components/RefereeMode.js
 import React, { useState, useEffect, useCallback } from 'react';
 import { getAllSquads, saveMatchResult, updateSquadStats } from '../services/squadService';
+import CountryFlag from 'react-country-flag';
+import { getCountryCode } from '../utils/countryCodes';
 
 export default function RefereeMode({ isOpen, onClose, currentUser }) {
   const [step, setStep] = useState('loading');
@@ -378,47 +380,55 @@ export default function RefereeMode({ isOpen, onClose, currentUser }) {
 
             {/* Porównanie - układ lewy vs prawy */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              {/* Zawodnik 1 - lewa strona */}
-              <div 
-                onClick={() => selectWinner('squad1')}
-                className="bg-white/5 rounded-xl p-6 border-2 border-white/10 hover:border-yellow-400/50 hover:bg-white/10 transition-all cursor-pointer group"
-              >
-                <div className="text-center">
-                  <div className="text-6xl mb-3">{comparisons[currentComparisonIndex].player1.flag}</div>
-                  <p className="font-bold text-white text-xl">{comparisons[currentComparisonIndex].player1.name}</p>
-                  <p className="text-sm text-white/40 mt-1">{comparisons[currentComparisonIndex].player1.country}</p>
-                  <p className="text-xs text-white/30">{comparisons[currentComparisonIndex].player1.club || comparisons[currentComparisonIndex].player1.country}</p>
-                  <div className="mt-3 inline-block px-3 py-1 bg-yellow-400/20 rounded-full text-xs text-yellow-400">
-                    {comparisons[currentComparisonIndex].position.split(' → ')[0]}
+                {/* Zawodnik 1 - lewa strona */}
+                <div 
+                  onClick={() => selectWinner('squad1')}
+                  className="bg-white/5 rounded-xl p-6 border-2 border-white/10 hover:border-yellow-400/50 hover:bg-white/10 transition-all cursor-pointer group"
+                >
+                      <div className="text-6xl mb-3 flex justify-center">
+                        <CountryFlag 
+                          countryCode={getCountryCode(comparisons[currentComparisonIndex].player1.country)} 
+                          svg 
+                          className="w-20 h-20 rounded-full object-cover" 
+                        />
+                      </div>
+                    <p className="font-bold text-white text-xl">{comparisons[currentComparisonIndex].player1.name}</p>
+                    <p className="text-sm text-white/40 mt-1">{comparisons[currentComparisonIndex].player1.country}</p>
+                    <p className="text-xs text-white/30">{comparisons[currentComparisonIndex].player1.club || comparisons[currentComparisonIndex].player1.country}</p>
+                    <div className="mt-3 inline-block px-3 py-1 bg-yellow-400/20 rounded-full text-xs text-yellow-400">
+                      {comparisons[currentComparisonIndex].position.split(' → ')[0]}
+                    </div>
+                  </div>
+                  <div className="mt-4 text-center opacity-0 group-hover:opacity-100 transition-all">
+                    <span className="text-yellow-400 text-sm">👑 Kliknij aby wybrać</span>
                   </div>
                 </div>
-                <div className="mt-4 text-center opacity-0 group-hover:opacity-100 transition-all">
-                  <span className="text-yellow-400 text-sm">👑 Kliknij aby wybrać</span>
-                </div>
-              </div>
 
-              {/* Zawodnik 2 - prawa strona */}
-              <div 
-                onClick={() => selectWinner('squad2')}
-                className="bg-white/5 rounded-xl p-6 border-2 border-white/10 hover:border-yellow-400/50 hover:bg-white/10 transition-all cursor-pointer group"
-              >
-                <div className="text-center">
-                  <div className="text-6xl mb-3">{comparisons[currentComparisonIndex].player2.flag}</div>
-                  <p className="font-bold text-white text-xl">{comparisons[currentComparisonIndex].player2.name}</p>
-                  <p className="text-sm text-white/40 mt-1">{comparisons[currentComparisonIndex].player2.country}</p>
-                  <p className="text-xs text-white/30">{comparisons[currentComparisonIndex].player2.club || comparisons[currentComparisonIndex].player2.country}</p>
-                  <div className="mt-3 inline-block px-3 py-1 bg-yellow-400/20 rounded-full text-xs text-yellow-400">
-                    {comparisons[currentComparisonIndex].position.split(' → ')[1] || comparisons[currentComparisonIndex].position}
+                {/* Zawodnik 2 - prawa strona */}
+                <div 
+                  onClick={() => selectWinner('squad2')}
+                  className="bg-white/5 rounded-xl p-6 border-2 border-white/10 hover:border-yellow-400/50 hover:bg-white/10 transition-all cursor-pointer group"
+                >
+                  <div className="text-center">
+                    <div className="text-6xl mb-3 flex justify-center">
+                      <CountryFlag 
+                        countryCode={getCountryCode(comparisons[currentComparisonIndex].player2.country)} 
+                        svg 
+                        className="w-16 h-16 rounded-full object-cover" 
+                      />
+                    </div>
+                    <p className="font-bold text-white text-xl">{comparisons[currentComparisonIndex].player2.name}</p>
+                    <p className="text-sm text-white/40 mt-1">{comparisons[currentComparisonIndex].player2.country}</p>
+                    <p className="text-xs text-white/30">{comparisons[currentComparisonIndex].player2.club || comparisons[currentComparisonIndex].player2.country}</p>
+                    <div className="mt-3 inline-block px-3 py-1 bg-yellow-400/20 rounded-full text-xs text-yellow-400">
+                      {comparisons[currentComparisonIndex].position.split(' → ')[1] || comparisons[currentComparisonIndex].position}
+                    </div>
+                  </div>
+                  <div className="mt-4 text-center opacity-0 group-hover:opacity-100 transition-all">
+                    <span className="text-yellow-400 text-sm">👑 Kliknij aby wybrać</span>
                   </div>
                 </div>
-                <div className="mt-4 text-center opacity-0 group-hover:opacity-100 transition-all">
-                  <span className="text-yellow-400 text-sm">👑 Kliknij aby wybrać</span>
-                </div>
-              </div>
             </div>
-
-            <div className="text-center text-xs text-white/30">Kliknij na zawodnika, który Twoim zdaniem jest lepszy</div>
-          </div>
         )}
 
         {/* Wynik końcowy */}

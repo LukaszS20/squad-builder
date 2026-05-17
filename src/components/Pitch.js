@@ -1,5 +1,7 @@
 import React from 'react';
 import { FORMATIONS } from '../data/formations';
+import CountryFlag from 'react-country-flag';
+import { getCountryCode } from '../utils/countryCodes';
 
 const positionColors = {
   GK: 'from-yellow-500 to-yellow-600',
@@ -148,20 +150,18 @@ function PlayerCard({ player, slotLabel, isSelecting, onRemove, onClick }) {
         `}
       >
         {/* Avatar circle z zdjęciem lub flagą */}
-        <div className={`
-          w-12 h-12 rounded-full border-2 flex items-center justify-center
-          shadow-lg relative overflow-hidden
-          bg-gradient-to-br ${playerGradient(player.primaryPosition)}
-          ${slotRoleColor(slotLabel)}
-        `}>
-          {player.image ? (
-            <img src={player.image} alt={player.name} className="w-full h-full object-cover" />
-          ) : (
-            <span className="text-2xl select-none">{player.flag}</span>
-          )}
-          {/* Shine overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
-        </div>
+                <div className={`w-12 h-12 rounded-full border-2 flex items-center justify-center shadow-lg relative overflow-hidden bg-gradient-to-br ${playerGradient(player.primaryPosition)} ${slotRoleColor(slotLabel)}`}>
+                  {player.image ? (
+                    <img src={player.image} alt={player.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <CountryFlag 
+                      countryCode={getCountryCode(player.country)} 
+                      svg 
+                      className="w-full h-full rounded-full object-cover scale-150" 
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
+                </div>
 
         {/* Name */}
         <div className="mt-1 bg-black/70 backdrop-blur-sm rounded px-1 py-0.5 max-w-[68px]">

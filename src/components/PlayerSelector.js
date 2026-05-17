@@ -1,5 +1,7 @@
 // src/components/PlayerSelector.js
 import React, { useState, useRef, useEffect } from 'react';
+import CountryFlag from 'react-country-flag';
+import { getCountryCode } from '../utils/countryCodes';
 
 const positionLabel = { GK: '🧤 GK', DEF: '🛡️ DEF', MID: '⚙️ MID', FWD: '⚡ FWD' };
 const positionBg = {
@@ -266,14 +268,18 @@ export default function PlayerSelector({ players, usedIds, slotLabel, onSelect, 
                   : 'border-white/8 bg-white/4 hover:bg-white/10 hover:border-white/20 hover:scale-[1.01] cursor-pointer'
                 }`}
             >
-              {/* Avatar */}
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0 border overflow-hidden ${positionBg[player.primaryPosition]}`}>
-                {player.image ? (
-                  <img src={player.image} alt={player.name} className="w-full h-full object-cover" />
-                ) : (
-                  <span>{player.flag}</span>
-                )}
-              </div>
+                {/* Avatar */}
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0 border overflow-hidden ${positionBg[player.primaryPosition]}`}>
+                  {player.image ? (
+                    <img src={player.image} alt={player.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <CountryFlag 
+                      countryCode={getCountryCode(player.country)} 
+                      svg 
+                      className="w-full h-full rounded-full object-cover scale-150" 
+                    />
+                  )}
+                </div>
 
               {/* Info */}
               <div className="flex-1 min-w-0">
