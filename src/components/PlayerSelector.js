@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// src/components/PlayerSelector.js
+import React, { useState, useRef, useEffect } from 'react';
 
 const positionLabel = { GK: '🧤 GK', DEF: '🛡️ DEF', MID: '⚙️ MID', FWD: '⚡ FWD' };
 const positionBg = {
@@ -16,11 +17,68 @@ const slotToCategory = {
   'RW': 'FWD', 'LW': 'FWD', 'ST': 'FWD',
 };
 
+// Komponent SmartTooltip (bez zmian)
+function SmartTooltip({ children, content }) {
+  const [position, setPosition] = useState('top');
+  const triggerRef = useRef(null);
+  const tooltipRef = useRef(null);
+
+  useEffect(() => {
+    const checkPosition = () => {
+      if (triggerRef.current && tooltipRef.current) {
+        const triggerRect = triggerRef.current.getBoundingClientRect();
+        const tooltipRect = tooltipRef.current.getBoundingClientRect();
+        const spaceAbove = triggerRect.top;
+        const spaceBelow = window.innerHeight - triggerRect.bottom;
+        if (spaceAbove < tooltipRect.height && spaceBelow > spaceAbove) {
+          setPosition('bottom');
+        } else {
+          setPosition('top');
+        }
+      }
+    };
+    const trigger = triggerRef.current;
+    if (trigger) {
+      trigger.addEventListener('mouseenter', checkPosition);
+      return () => trigger.removeEventListener('mouseenter', checkPosition);
+    }
+  }, [content]);
+
+  return (
+    <div className="relative inline-block" ref={triggerRef}>
+      <div className="cursor-help">{children}</div>
+      <div 
+        ref={tooltipRef}
+        className={`absolute z-50 px-3 py-1.5 bg-gray-900/95 backdrop-blur rounded-lg text-[10px] font-bold whitespace-nowrap shadow-xl border border-white/15 pointer-events-none transition-opacity duration-150 opacity-0 group-hover/tooltip:opacity-100
+          ${position === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'}`}
+      >
+        <span className="text-white/60 text-[8px] uppercase tracking-wider mr-1">pozycje:</span>
+        {content}
+      </div>
+    </div>
+  );
+}
+
 export default function PlayerSelector({ players, usedIds, slotLabel, onSelect, onClose }) {
   const [search, setSearch] = useState('');
   const [filterPos, setFilterPos] = useState('ALL');
+  const [filterCountry, setFilterCountry] = useState('ALL');
+  const [filterClub, setFilterClub] = useState('ALL');
   
   const isGkSlot = slotLabel === 'GK';
+  
+  // Pobierz unikalne kraje i kluby z dostępnych zawodników
+  const getUniqueCountries = () => {
+    const countries = new Set();
+    validPlayers.forEach(p => countries.add(p.country));
+    return Array.from(countries).sort();
+  };
+  
+  const getUniqueClubs = () => {
+    const clubs = new Set();
+    validPlayers.forEach(p => clubs.add(p.club || p.country));
+    return Array.from(clubs).sort();
+  };
   
   // Filtruj zawodników którzy mogą grać na danej pozycji
   const getValidPlayersForSlot = () => {
@@ -47,19 +105,40 @@ export default function PlayerSelector({ players, usedIds, slotLabel, onSelect, 
   };
   
   const validPlayers = getValidPlayersForSlot();
+  const uniqueCountries = getUniqueCountries();
+  const uniqueClubs = getUniqueClubs();
   
   const filtered = validPlayers.filter((p) => {
-    const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
+    // Wyszukiwanie tekstowe
+    const matchSearch = search === '' || 
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.country.toLowerCase().includes(search.toLowerCase()) ||
-      p.club.toLowerCase().includes(search.toLowerCase());
+      (p.club && p.club.toLowerCase().includes(search.toLowerCase()));
+    
+    // Filtr pozycji
     const matchPos = filterPos === 'ALL' || p.primaryPosition === filterPos;
-    return matchSearch && matchPos;
+    
+    // Filtr kraju
+    const matchCountry = filterCountry === 'ALL' || p.country === filterCountry;
+    
+    // Filtr klubu
+    const matchClub = filterClub === 'ALL' || (p.club && p.club === filterClub);
+    
+    return matchSearch && matchPos && matchCountry && matchClub;
   });
 
+  // Resetuj filtry przy zmianie slotu
+  useEffect(() => {
+    setFilterPos('ALL');
+    setFilterCountry('ALL');
+    setFilterClub('ALL');
+    setSearch('');
+  }, [slotLabel]);
+
   return (
-    <div className="w-full lg:w-96 bg-[#0d1525] border-l border-white/10 flex flex-col animate-in slide-in-from-right duration-200">
+    <div className="w-full lg:w-[500px] bg-[#0d1525] border-l border-white/10 flex flex-col animate-in slide-in-from-right duration-200">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
+      <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between sticky top-0 bg-[#0d1525] z-10">
         <div>
           <h2 className="text-lg font-black tracking-widest uppercase text-white">Wybierz zawodnika</h2>
           <p className="text-xs text-white/40 tracking-wider">
@@ -76,38 +155,94 @@ export default function PlayerSelector({ players, usedIds, slotLabel, onSelect, 
       </div>
 
       {/* Search */}
-      <div className="px-4 pt-4 pb-2">
+      <div className="px-4 pt-4 pb-2 sticky top-[73px] bg-[#0d1525] z-10">
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Szukaj zawodnika, klubu, kraju..."
+          placeholder="🔍 Szukaj po nazwie, kraju lub klubie..."
           className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-yellow-400/50 focus:bg-white/8 transition-all"
           autoFocus
         />
       </div>
 
-      {/* Position filter */}
-      {!isGkSlot && (
-        <div className="px-4 pb-3 flex gap-2 flex-wrap">
-          {['ALL', 'GK', 'DEF', 'MID', 'FWD'].map((pos) => (
-            <button
-              key={pos}
-              onClick={() => setFilterPos(pos)}
-              className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border transition-all ${
-                filterPos === pos
-                  ? 'bg-yellow-400 text-black border-yellow-400'
-                  : 'bg-white/5 text-white/50 border-white/10 hover:bg-white/10 hover:text-white'
-              }`}
+      {/* Filtry */}
+      <div className="px-4 pb-3 space-y-2 sticky top-[125px] bg-[#0d1525] z-10">
+        {/* Filtr pozycji */}
+        {!isGkSlot && (
+          <div className="flex gap-2 flex-wrap">
+            {['ALL', 'GK', 'DEF', 'MID', 'FWD'].map((pos) => (
+              <button
+                key={pos}
+                onClick={() => setFilterPos(pos)}
+                className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border transition-all ${
+                  filterPos === pos
+                    ? 'bg-yellow-400 text-black border-yellow-400'
+                    : 'bg-white/5 text-white/50 border-white/10 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                {pos === 'ALL' ? 'Wszyscy' : positionLabel[pos]}
+              </button>
+            ))}
+          </div>
+        )}
+        
+        {/* Filtr kraju */}
+        {uniqueCountries.length > 0 && (
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-[10px] text-white/40 uppercase tracking-wider">🌍 Kraj:</span>
+            <select
+              value={filterCountry}
+              onChange={(e) => setFilterCountry(e.target.value)}
+              className="text-xs bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-yellow-400/50"
             >
-              {pos === 'ALL' ? 'Wszyscy' : positionLabel[pos]}
-            </button>
-          ))}
-        </div>
-      )}
+              <option value="ALL">Wszystkie kraje</option>
+              {uniqueCountries.map(country => (
+                <option key={country} value={country}>{country}</option>
+              ))}
+            </select>
+          </div>
+        )}
+        
+        {/* Filtr klubu */}
+        {uniqueClubs.length > 0 && (
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-[10px] text-white/40 uppercase tracking-wider">🏟️ Klub:</span>
+            <select
+              value={filterClub}
+              onChange={(e) => setFilterClub(e.target.value)}
+              className="text-xs bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-yellow-400/50"
+            >
+              <option value="ALL">Wszystkie kluby</option>
+              {uniqueClubs.map(club => (
+                <option key={club} value={club}>{club}</option>
+              ))}
+            </select>
+          </div>
+        )}
+        
+        {/* Przycisk reset filtrów */}
+        {(filterPos !== 'ALL' || filterCountry !== 'ALL' || filterClub !== 'ALL' || search !== '') && (
+          <button
+            onClick={() => {
+              setFilterPos('ALL');
+              setFilterCountry('ALL');
+              setFilterClub('ALL');
+              setSearch('');
+            }}
+            className="text-[10px] px-2 py-1 rounded bg-white/10 text-white/60 hover:bg-white/20 transition-all"
+          >
+            ✕ Resetuj filtry
+          </button>
+        )}
+      </div>
 
       {/* Player list */}
       <div className="flex-1 overflow-y-auto px-3 pb-4 space-y-2 custom-scrollbar">
+        <div className="text-xs text-white/40 px-2 py-1">
+          Znaleziono: {filtered.length} zawodników
+        </div>
+        
         {filtered.length === 0 && (
           <p className="text-center text-white/30 text-sm py-8">
             {validPlayers.length === 0 
@@ -125,7 +260,7 @@ export default function PlayerSelector({ players, usedIds, slotLabel, onSelect, 
               key={player.id}
               onClick={() => !isUsed && onSelect(player)}
               disabled={isUsed}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all duration-150 text-left group
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all duration-150 text-left
                 ${isUsed
                   ? 'opacity-30 cursor-not-allowed border-white/5 bg-white/2'
                   : 'border-white/8 bg-white/4 hover:bg-white/10 hover:border-white/20 hover:scale-[1.01] cursor-pointer'
@@ -143,33 +278,26 @@ export default function PlayerSelector({ players, usedIds, slotLabel, onSelect, 
               {/* Info */}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-white truncate leading-tight">{player.name}</p>
-                <p className="text-xs text-white/40 truncate">{player.club} · {player.country}</p>
+                <p className="text-xs text-white/40 truncate">
+                  {player.club || player.country} · {player.country}
+                </p>
               </div>
 
-              {/* Position badges z tooltipem */}
-              <div className="relative shrink-0">
-                <div className="flex gap-1">
-                  {/* Pokazujemy pierwsze 2 pozycje */}
-                  {player.positions.slice(0, 2).map(pos => (
-                    <span key={pos} className={`text-[9px] font-black px-1.5 py-0.5 rounded border ${positionBg[slotToCategory[pos] || 'MID']}`}>
-                      {pos}
+              {/* Position badges z inteligentnym tooltipem */}
+              <div className="flex gap-1 shrink-0">
+                {player.positions.slice(0, 2).map(pos => (
+                  <span key={pos} className={`text-[9px] font-black px-1.5 py-0.5 rounded border ${positionBg[slotToCategory[pos] || 'MID']}`}>
+                    {pos}
+                  </span>
+                ))}
+                
+                {hasManyPositions && (
+                  <SmartTooltip content={player.positions.join(' · ')}>
+                    <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-white/10 text-white/60">
+                      +{player.positions.length - 2}
                     </span>
-                  ))}
-                  
-                  {/* Jeśli jest więcej niż 2 pozycje - pokazujemy +X z tooltipem */}
-                  {hasManyPositions && (
-                    <div className="group/tooltip relative">
-                      <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-white/10 text-white/60 cursor-help block">
-                        +{player.positions.length - 2}
-                      </span>
-                      {/* Tooltip - pojawia się na hover */}
-                      <div className="absolute top-full right-0 mt-2 px-3 py-1.5 bg-gray-900/95 backdrop-blur rounded-lg text-[10px] font-bold whitespace-nowrap pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-50 shadow-xl border border-white/15">
-                        <span className="text-white/60 text-[8px] uppercase tracking-wider mr-1">pozycje:</span>
-                        {player.positions.join(' · ')}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                  </SmartTooltip>
+                )}
               </div>
             </button>
           );
@@ -180,6 +308,7 @@ export default function PlayerSelector({ players, usedIds, slotLabel, onSelect, 
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+        select option { background: #0d1525; color: white; }
       `}</style>
     </div>
   );
