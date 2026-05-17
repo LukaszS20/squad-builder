@@ -6,6 +6,7 @@ import StatsPanel from './components/StatsPanel';
 import { loadPlayers, PLAYERS } from './data/players';
 import { FORMATIONS } from './data/formations';
 import SquadsModal from './components/SquadsModal';
+import FormationsModal from './components/FormationsModal';
 
 const STORAGE_KEY = 'wc_squad_builder';
 
@@ -18,6 +19,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [loadProgress, setLoadProgress] = useState({ current: 0, total: 0, team: '' });
   const [isSquadsModalOpen, setIsSquadsModalOpen] = useState(false);
+  const [isFormationsModalOpen, setIsFormationsModalOpen] = useState(false);
 
   const handleLoadSquad = (loadedSquad, loadedFormation) => {
     setSquad(loadedSquad);
@@ -114,51 +116,38 @@ export default function App() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white font-['Barlow_Condensed',sans-serif]">
-      {/* Header */}
-      <header className="border-b border-white/10 px-6 py-3 flex items-center justify-between bg-[#0d1525]">
+return (
+    <div className="min-h-screen w-full min-w-full bg-[#0a0f1a] text-white font-['Barlow_Condensed',sans-serif] overflow-x-hidden">
+      <header className="border-b border-white/10 px-4 py-3 flex items-center justify-between bg-[#0d1525]">
         {/* Lewa strona - logo */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <span className="text-2xl">⚽</span>
-          <div>
-            <h1 className="text-xl font-black tracking-widest uppercase text-yellow-400">
+          <div className="hidden sm:block">
+            <h1 className="text-lg font-black tracking-widest uppercase text-yellow-400">
               World Cup
             </h1>
-            <p className="text-[9px] tracking-[0.3em] text-white/40 uppercase">Squad Builder</p>
+            <p className="text-[8px] tracking-[0.3em] text-white/40 uppercase">Squad Builder</p>
           </div>
         </div>
 
-        {/* Prawa strona - formacje i skład społeczności */}
-        <div className="flex items-center gap-4">
-          {/* Przycisk otwierający modal składów */}
-          <button
-            onClick={() => setIsSquadsModalOpen(true)}
-            className="px-3 py-1.5 rounded-lg text-sm font-bold bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-all flex items-center gap-2"
-          >
-            📋 Składy
-          </button>
+        {/* Środkowa część - przycisk formacji (mobile friendly) */}
+        <button
+          onClick={() => setIsFormationsModalOpen(true)}
+          className="px-4 py-2 rounded-xl bg-yellow-400/20 text-yellow-400 font-bold text-sm uppercase tracking-wider flex items-center gap-2"
+        >
+          <span>📐</span>
+          <span>{formation}</span>
+          <span>▼</span>
+        </button>
 
-          {/* Selektor formacji */}
-          <div className="flex items-center gap-3">
-            <span className="text-white/40 text-xs uppercase tracking-widest hidden sm:inline">Formation</span>
-            <div className="flex gap-1">
-              {Object.keys(FORMATIONS).map((f) => (
-                <button
-                  key={f}
-                  onClick={() => handleFormationChange(f)}
-                  className={`px-3 py-1 rounded text-xs font-bold tracking-wider uppercase transition-all duration-200 ${
-                    formation === f
-                      ? 'bg-yellow-400 text-black shadow-[0_0_20px_rgba(250,204,21,0.4)]'
-                      : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
-                  }`}
-                >
-                  {f}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+        {/* Prawa strona - przycisk składów */}
+        <button
+          onClick={() => setIsSquadsModalOpen(true)}
+          className="px-3 py-2 rounded-lg text-sm font-bold bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-all flex items-center gap-2"
+        >
+          <span>📋</span>
+          <span className="hidden sm:inline">Składy</span>
+        </button>
       </header>
 
       <main className="flex flex-col lg:flex-row gap-0 min-h-[calc(100vh-57px)]">
@@ -194,6 +183,14 @@ export default function App() {
         currentSquad={squad}
         currentFormation={formation}
         onLoadSquad={handleLoadSquad}
+      />
+
+      {/* Modal wyboru formacji */}
+      <FormationsModal
+        isOpen={isFormationsModalOpen}
+        onClose={() => setIsFormationsModalOpen(false)}
+        currentFormation={formation}
+        onSelectFormation={handleFormationChange}
       />
     </div>
   );
