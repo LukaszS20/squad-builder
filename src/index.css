@@ -25,3 +25,35 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* Całkowicie wyłącz przewijanie dla całej aplikacji */
+* {
+  user-select: none; /* Zapobiega zaznaczaniu tekstu */
+}
+
+body {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+#root {
+  overflow-y: auto;
+  height: 100%;
+}
+
+/* Poprawa wyświetlania selectów */
+select {
+  background-color: #1a1f2e !important;
+  color: white !important;
+}
+
+select option {
+  background-color: #1a1f2e !important;
+  color: white !important;
+}
+
+select:focus {
+  outline: none;
+  border-color: #fbbf24;
+}

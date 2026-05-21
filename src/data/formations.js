@@ -169,4 +169,364 @@ export const FORMATIONS = {
       { id: 'ST', label: 'ST', row: 85, col: 50 },
     ],
   },
+    '3-1-4-2': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'CB1', label: 'CB', row: 28, col: 70 },
+      { id: 'CB2', label: 'CB', row: 28, col: 50 },
+      { id: 'CB3', label: 'CB', row: 28, col: 30 },
+
+      { id: 'CDM', label: 'CDM', row: 45, col: 50 },
+
+      { id: 'RM', label: 'RM', row: 62, col: 82 },
+      { id: 'CM1', label: 'CM', row: 60, col: 62 },
+      { id: 'CM2', label: 'CM', row: 60, col: 38 },
+      { id: 'LM', label: 'LM', row: 62, col: 18 },
+
+      { id: 'ST1', label: 'ST', row: 84, col: 62 },
+      { id: 'ST2', label: 'ST', row: 84, col: 38 },
+    ],
+  },
+
+  '3-4-1-2': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'CB1', label: 'CB', row: 28, col: 70 },
+      { id: 'CB2', label: 'CB', row: 28, col: 50 },
+      { id: 'CB3', label: 'CB', row: 28, col: 30 },
+
+      { id: 'RM', label: 'RM', row: 52, col: 84 },
+      { id: 'CM1', label: 'CM', row: 54, col: 62 },
+      { id: 'CM2', label: 'CM', row: 54, col: 38 },
+      { id: 'LM', label: 'LM', row: 52, col: 16 },
+
+      { id: 'CAM', label: 'CAM', row: 70, col: 50 },
+
+      { id: 'ST1', label: 'ST', row: 84, col: 62 },
+      { id: 'ST2', label: 'ST', row: 84, col: 38 },
+    ],
+  },
+
+  '3-4-2-1': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'CB1', label: 'CB', row: 28, col: 70 },
+      { id: 'CB2', label: 'CB', row: 28, col: 50 },
+      { id: 'CB3', label: 'CB', row: 28, col: 30 },
+
+      { id: 'RM', label: 'RM', row: 52, col: 84 },
+      { id: 'CM1', label: 'CM', row: 54, col: 62 },
+      { id: 'CM2', label: 'CM', row: 54, col: 38 },
+      { id: 'LM', label: 'LM', row: 52, col: 16 },
+
+      { id: 'CAM1', label: 'CAM', row: 72, col: 35 },
+      { id: 'CAM2', label: 'CAM', row: 72, col: 65 },
+
+      { id: 'ST', label: 'ST', row: 86, col: 50 },
+    ],
+  },
+
+    '4-1-2-1-2': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RB', label: 'RB', row: 28, col: 84 },
+      { id: 'CB1', label: 'CB', row: 28, col: 62 },
+      { id: 'CB2', label: 'CB', row: 28, col: 38 },
+      { id: 'LB', label: 'LB', row: 28, col: 16 },
+
+      { id: 'CDM', label: 'CDM', row: 46, col: 50 },
+
+      { id: 'CM1', label: 'CM', row: 60, col: 68 },
+      { id: 'CM2', label: 'CM', row: 60, col: 32 },
+
+      { id: 'CAM', label: 'CAM', row: 74, col: 50 },
+
+      { id: 'ST1', label: 'ST', row: 86, col: 62 },
+      { id: 'ST2', label: 'ST', row: 86, col: 38 },
+    ],
+  },
+
+  '4-1-2-1-2(2)': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RB', label: 'RB', row: 28, col: 84 },
+      { id: 'CB1', label: 'CB', row: 28, col: 62 },
+      { id: 'CB2', label: 'CB', row: 28, col: 38 },
+      { id: 'LB', label: 'LB', row: 28, col: 16 },
+
+      { id: 'CDM', label: 'CDM', row: 48, col: 50 },
+
+      { id: 'CM1', label: 'CM', row: 62, col: 66 },
+      { id: 'CM2', label: 'CM', row: 62, col: 34 },
+
+      { id: 'CAM', label: 'CAM', row: 76, col: 50 },
+
+      { id: 'ST1', label: 'ST', row: 88, col: 60 },
+      { id: 'ST2', label: 'ST', row: 88, col: 40 },
+    ],
+  },
+
+  '4-1-3-2': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RB', label: 'RB', row: 28, col: 84 },
+      { id: 'CB1', label: 'CB', row: 28, col: 62 },
+      { id: 'CB2', label: 'CB', row: 28, col: 38 },
+      { id: 'LB', label: 'LB', row: 28, col: 16 },
+
+      { id: 'CDM', label: 'CDM', row: 46, col: 50 },
+
+      { id: 'RM', label: 'RM', row: 64, col: 82 },
+      { id: 'CM', label: 'CM', row: 64, col: 50 },
+      { id: 'LM', label: 'LM', row: 64, col: 18 },
+
+      { id: 'ST1', label: 'ST', row: 86, col: 62 },
+      { id: 'ST2', label: 'ST', row: 86, col: 38 },
+    ],
+  },
+
+  '4-1-4-1': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RB', label: 'RB', row: 28, col: 84 },
+      { id: 'CB1', label: 'CB', row: 28, col: 62 },
+      { id: 'CB2', label: 'CB', row: 28, col: 38 },
+      { id: 'LB', label: 'LB', row: 28, col: 16 },
+
+      { id: 'CDM', label: 'CDM', row: 46, col: 50 },
+
+      { id: 'RM', label: 'RM', row: 64, col: 82 },
+      { id: 'CM1', label: 'CM', row: 64, col: 62 },
+      { id: 'CM2', label: 'CM', row: 64, col: 38 },
+      { id: 'LM', label: 'LM', row: 64, col: 18 },
+
+      { id: 'ST', label: 'ST', row: 86, col: 50 },
+    ],
+  },
+
+  '4-2-1-3': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RB', label: 'RB', row: 28, col: 84 },
+      { id: 'CB1', label: 'CB', row: 28, col: 62 },
+      { id: 'CB2', label: 'CB', row: 28, col: 38 },
+      { id: 'LB', label: 'LB', row: 28, col: 16 },
+
+      { id: 'CDM1', label: 'CDM', row: 48, col: 62 },
+      { id: 'CDM2', label: 'CDM', row: 48, col: 38 },
+
+      { id: 'CAM', label: 'CAM', row: 68, col: 50 },
+
+      { id: 'RW', label: 'RW', row: 84, col: 82 },
+      { id: 'ST', label: 'ST', row: 86, col: 50 },
+      { id: 'LW', label: 'LW', row: 84, col: 18 },
+    ],
+  },
+
+  '4-2-3-1(2)': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RB', label: 'RB', row: 28, col: 84 },
+      { id: 'CB1', label: 'CB', row: 28, col: 62 },
+      { id: 'CB2', label: 'CB', row: 28, col: 38 },
+      { id: 'LB', label: 'LB', row: 28, col: 16 },
+
+      { id: 'CDM1', label: 'CDM', row: 48, col: 62 },
+      { id: 'CDM2', label: 'CDM', row: 48, col: 38 },
+
+      { id: 'RAM', label: 'CAM', row: 68, col: 78 },
+      { id: 'CAM', label: 'CAM', row: 70, col: 50 },
+      { id: 'LAM', label: 'CAM', row: 68, col: 22 },
+
+      { id: 'ST', label: 'ST', row: 88, col: 50 },
+    ],
+  },
+
+  '4-3-1-2': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RB', label: 'RB', row: 28, col: 84 },
+      { id: 'CB1', label: 'CB', row: 28, col: 62 },
+      { id: 'CB2', label: 'CB', row: 28, col: 38 },
+      { id: 'LB', label: 'LB', row: 28, col: 16 },
+
+      { id: 'CM1', label: 'CM', row: 52, col: 68 },
+      { id: 'CDM', label: 'CDM', row: 50, col: 50 },
+      { id: 'CM2', label: 'CM', row: 52, col: 32 },
+
+      { id: 'CAM', label: 'CAM', row: 72, col: 50 },
+
+      { id: 'ST1', label: 'ST', row: 86, col: 62 },
+      { id: 'ST2', label: 'ST', row: 86, col: 38 },
+    ],
+  },
+
+  '4-3-2-1': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RB', label: 'RB', row: 28, col: 84 },
+      { id: 'CB1', label: 'CB', row: 28, col: 62 },
+      { id: 'CB2', label: 'CB', row: 28, col: 38 },
+      { id: 'LB', label: 'LB', row: 28, col: 16 },
+
+      { id: 'CM1', label: 'CM', row: 52, col: 68 },
+      { id: 'CDM', label: 'CDM', row: 50, col: 50 },
+      { id: 'CM2', label: 'CM', row: 52, col: 32 },
+
+      { id: 'CF1', label: 'CF', row: 74, col: 35 },
+      { id: 'CF2', label: 'CF', row: 74, col: 65 },
+
+      { id: 'ST', label: 'ST', row: 88, col: 50 },
+    ],
+  },
+
+    '4-3-3(2)': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RB', label: 'RB', row: 28, col: 84 },
+      { id: 'CB1', label: 'CB', row: 28, col: 62 },
+      { id: 'CB2', label: 'CB', row: 28, col: 38 },
+      { id: 'LB', label: 'LB', row: 28, col: 16 },
+
+      { id: 'CM1', label: 'CM', row: 52, col: 68 },
+      { id: 'CDM', label: 'CDM', row: 50, col: 50 },
+      { id: 'CM2', label: 'CM', row: 52, col: 32 },
+
+      { id: 'RW', label: 'RW', row: 84, col: 82 },
+      { id: 'ST', label: 'ST', row: 88, col: 50 },
+      { id: 'LW', label: 'LW', row: 84, col: 18 },
+    ],
+  },
+
+  '4-3-3(3)': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RB', label: 'RB', row: 28, col: 84 },
+      { id: 'CB1', label: 'CB', row: 28, col: 62 },
+      { id: 'CB2', label: 'CB', row: 28, col: 38 },
+      { id: 'LB', label: 'LB', row: 28, col: 16 },
+
+      { id: 'CM1', label: 'CM', row: 54, col: 68 },
+      { id: 'CM2', label: 'CM', row: 54, col: 32 },
+      { id: 'CAM', label: 'CAM', row: 68, col: 50 },
+
+      { id: 'RW', label: 'RW', row: 84, col: 82 },
+      { id: 'ST', label: 'ST', row: 88, col: 50 },
+      { id: 'LW', label: 'LW', row: 84, col: 18 },
+    ],
+  },
+
+  '4-4-1-1(2)': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RB', label: 'RB', row: 28, col: 84 },
+      { id: 'CB1', label: 'CB', row: 28, col: 62 },
+      { id: 'CB2', label: 'CB', row: 28, col: 38 },
+      { id: 'LB', label: 'LB', row: 28, col: 16 },
+
+      { id: 'RM', label: 'RM', row: 54, col: 82 },
+      { id: 'CM1', label: 'CM', row: 56, col: 62 },
+      { id: 'CM2', label: 'CM', row: 56, col: 38 },
+      { id: 'LM', label: 'LM', row: 54, col: 18 },
+
+      { id: 'CF', label: 'CF', row: 74, col: 50 },
+
+      { id: 'ST', label: 'ST', row: 88, col: 50 },
+    ],
+  },
+
+  '4-4-2(2)': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RB', label: 'RB', row: 28, col: 84 },
+      { id: 'CB1', label: 'CB', row: 28, col: 62 },
+      { id: 'CB2', label: 'CB', row: 28, col: 38 },
+      { id: 'LB', label: 'LB', row: 28, col: 16 },
+
+      { id: 'CDM1', label: 'CDM', row: 50, col: 62 },
+      { id: 'CDM2', label: 'CDM', row: 50, col: 38 },
+
+      { id: 'RM', label: 'RM', row: 66, col: 82 },
+      { id: 'LM', label: 'LM', row: 66, col: 18 },
+
+      { id: 'ST1', label: 'ST', row: 88, col: 62 },
+      { id: 'ST2', label: 'ST', row: 88, col: 38 },
+    ],
+  },
+
+  '4-5-1(2)': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RB', label: 'RB', row: 28, col: 84 },
+      { id: 'CB1', label: 'CB', row: 28, col: 62 },
+      { id: 'CB2', label: 'CB', row: 28, col: 38 },
+      { id: 'LB', label: 'LB', row: 28, col: 16 },
+
+      { id: 'CDM1', label: 'CDM', row: 48, col: 62 },
+      { id: 'CDM2', label: 'CDM', row: 48, col: 38 },
+
+      { id: 'CAM', label: 'CAM', row: 66, col: 50 },
+
+      { id: 'RM', label: 'RM', row: 66, col: 82 },
+      { id: 'LM', label: 'LM', row: 66, col: 18 },
+
+      { id: 'ST', label: 'ST', row: 88, col: 50 },
+    ],
+  },
+
+  '5-2-1-2': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RWB', label: 'RWB', row: 32, col: 88 },
+      { id: 'CB1', label: 'CB', row: 28, col: 68 },
+      { id: 'CB2', label: 'CB', row: 28, col: 50 },
+      { id: 'CB3', label: 'CB', row: 28, col: 32 },
+      { id: 'LWB', label: 'LWB', row: 32, col: 12 },
+
+      { id: 'CM1', label: 'CM', row: 56, col: 62 },
+      { id: 'CM2', label: 'CM', row: 56, col: 38 },
+
+      { id: 'CAM', label: 'CAM', row: 72, col: 50 },
+
+      { id: 'ST1', label: 'ST', row: 88, col: 62 },
+      { id: 'ST2', label: 'ST', row: 88, col: 38 },
+    ],
+  },
+
+  '5-2-3': {
+    slots: [
+      { id: 'GK', label: 'GK', row: 8, col: 50 },
+
+      { id: 'RWB', label: 'RWB', row: 32, col: 88 },
+      { id: 'CB1', label: 'CB', row: 28, col: 68 },
+      { id: 'CB2', label: 'CB', row: 28, col: 50 },
+      { id: 'CB3', label: 'CB', row: 28, col: 32 },
+      { id: 'LWB', label: 'LWB', row: 32, col: 12 },
+
+      { id: 'CM1', label: 'CM', row: 56, col: 62 },
+      { id: 'CM2', label: 'CM', row: 56, col: 38 },
+
+      { id: 'RW', label: 'RW', row: 84, col: 82 },
+      { id: 'ST', label: 'ST', row: 88, col: 50 },
+      { id: 'LW', label: 'LW', row: 84, col: 18 },
+    ],
+  },
+
 };

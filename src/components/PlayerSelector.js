@@ -19,7 +19,7 @@ const slotToCategory = {
   'RW': 'FWD', 'LW': 'FWD', 'ST': 'FWD',
 };
 
-// Komponent SmartTooltip (bez zmian)
+// Komponent SmartTooltip
 function SmartTooltip({ children, content }) {
   const [position, setPosition] = useState('top');
   const triggerRef = useRef(null);
@@ -61,13 +61,48 @@ function SmartTooltip({ children, content }) {
   );
 }
 
-export default function PlayerSelector({ players, usedIds, slotLabel, onSelect, onClose }) {
+export default function PlayerSelector({ players, usedIds, slotLabel, onSelect, onClose, categoryFilter }) {
   const [search, setSearch] = useState('');
   const [filterPos, setFilterPos] = useState('ALL');
   const [filterCountry, setFilterCountry] = useState('ALL');
   const [filterClub, setFilterClub] = useState('ALL');
   
   const isGkSlot = slotLabel === 'GK';
+  
+  // Filtruj zawodników którzy mogą grać na danej pozycji
+  const getValidPlayersForSlot = () => {
+    let valid = [];
+    
+    if (isGkSlot) {
+      valid = players.filter(p => p.positions.includes('GK'));
+    } else {
+      valid = players.filter(player => {
+        if (player.positions.includes(slotLabel)) return true;
+        
+        if (slotLabel === 'CM' && player.positions.some(p => ['CM', 'CAM', 'CDM'].includes(p))) return true;
+        if (slotLabel === 'CB' && player.positions.some(p => ['CB', 'LB', 'RB'].includes(p))) return true;
+        if (slotLabel === 'CDM' && player.positions.includes('CDM')) return true;
+        if (slotLabel === 'CAM' && player.positions.includes('CAM')) return true;
+        if (slotLabel === 'RM' && player.positions.some(p => ['RM', 'RW'].includes(p))) return true;
+        if (slotLabel === 'LM' && player.positions.some(p => ['LM', 'LW'].includes(p))) return true;
+        if (slotLabel === 'RB' && player.positions.some(p => ['RB', 'RWB'].includes(p))) return true;
+        if (slotLabel === 'LB' && player.positions.some(p => ['LB', 'LWB'].includes(p))) return true;
+        if (slotLabel === 'RW' && player.positions.some(p => ['RW', 'RM'].includes(p))) return true;
+        if (slotLabel === 'LW' && player.positions.some(p => ['LW', 'LM'].includes(p))) return true;
+        
+        return false;
+      });
+    }
+    
+    // Zastosuj filtr kategorii jeśli istnieje
+    if (categoryFilter) {
+      valid = valid.filter(categoryFilter);
+    }
+    
+    return valid;
+  };
+  
+  const validPlayers = getValidPlayersForSlot();
   
   // Pobierz unikalne kraje i kluby z dostępnych zawodników
   const getUniqueCountries = () => {
@@ -82,48 +117,18 @@ export default function PlayerSelector({ players, usedIds, slotLabel, onSelect, 
     return Array.from(clubs).sort();
   };
   
-  // Filtruj zawodników którzy mogą grać na danej pozycji
-  const getValidPlayersForSlot = () => {
-    if (isGkSlot) {
-      return players.filter(p => p.positions.includes('GK'));
-    }
-    
-    return players.filter(player => {
-      if (player.positions.includes(slotLabel)) return true;
-      
-      if (slotLabel === 'CM' && player.positions.some(p => ['CM', 'CAM', 'CDM'].includes(p))) return true;
-      if (slotLabel === 'CB' && player.positions.some(p => ['CB', 'LB', 'RB'].includes(p))) return true;
-      if (slotLabel === 'CDM' && player.positions.includes('CDM')) return true;
-      if (slotLabel === 'CAM' && player.positions.includes('CAM')) return true;
-      if (slotLabel === 'RM' && player.positions.some(p => ['RM', 'RW'].includes(p))) return true;
-      if (slotLabel === 'LM' && player.positions.some(p => ['LM', 'LW'].includes(p))) return true;
-      if (slotLabel === 'RB' && player.positions.some(p => ['RB', 'RWB'].includes(p))) return true;
-      if (slotLabel === 'LB' && player.positions.some(p => ['LB', 'LWB'].includes(p))) return true;
-      if (slotLabel === 'RW' && player.positions.some(p => ['RW', 'RM'].includes(p))) return true;
-      if (slotLabel === 'LW' && player.positions.some(p => ['LW', 'LM'].includes(p))) return true;
-      
-      return false;
-    });
-  };
-  
-  const validPlayers = getValidPlayersForSlot();
   const uniqueCountries = getUniqueCountries();
   const uniqueClubs = getUniqueClubs();
   
+  // Ostateczne filtrowanie (wyszukiwanie, pozycja, kraj, klub)
   const filtered = validPlayers.filter((p) => {
-    // Wyszukiwanie tekstowe
     const matchSearch = search === '' || 
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.country.toLowerCase().includes(search.toLowerCase()) ||
       (p.club && p.club.toLowerCase().includes(search.toLowerCase()));
     
-    // Filtr pozycji
     const matchPos = filterPos === 'ALL' || p.primaryPosition === filterPos;
-    
-    // Filtr kraju
     const matchCountry = filterCountry === 'ALL' || p.country === filterCountry;
-    
-    // Filtr klubu
     const matchClub = filterClub === 'ALL' || (p.club && p.club === filterClub);
     
     return matchSearch && matchPos && matchCountry && matchClub;
@@ -268,28 +273,55 @@ export default function PlayerSelector({ players, usedIds, slotLabel, onSelect, 
                   : 'border-white/8 bg-white/4 hover:bg-white/10 hover:border-white/20 hover:scale-[1.01] cursor-pointer'
                 }`}
             >
-                {/* Avatar */}
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0 border overflow-hidden ${positionBg[player.primaryPosition]}`}>
-                  {player.image ? (
-                    <img src={player.image} alt={player.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <CountryFlag 
-                      countryCode={getCountryCode(player.country)} 
-                      svg 
-                      className="w-full h-full rounded-full object-cover scale-150" 
-                    />
-                  )}
-                </div>
+              {/* Avatar */}
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0 border overflow-hidden ${positionBg[player.primaryPosition]}`}>
+                {player.image ? (
+                  <img src={player.image} alt={player.name} className="w-full h-full object-cover" />
+                ) : (
+                  <CountryFlag 
+                    countryCode={getCountryCode(player.country)} 
+                    svg 
+                    className="w-full h-full rounded-full object-cover scale-150" 
+                  />
+                )}
+              </div>
 
               {/* Info */}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-white truncate leading-tight">{player.name}</p>
-                <p className="text-xs text-white/40 truncate">
-                  {player.club || player.country} · {player.country}
-                </p>
+                <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[10px] text-white/40">
+                  <span>{player.club || player.country}</span>
+                  <span className="text-[8px]">•</span>
+                  <span>{player.country}</span>
+                  {player.age && (
+                    <>
+                      <span className="text-[8px]">•</span>
+                      <span>🎂 {player.age} lat</span>
+                    </>
+                  )}
+                </div>
+                <div className="flex flex-wrap gap-2 text-[9px] text-white/30 mt-0.5">
+                  {player.height && (
+                    <span className="flex items-center gap-0.5">
+                      📏 {player.height} cm
+                    </span>
+                  )}
+                  {player.foot && (
+                    <span className="flex items-center gap-0.5">
+                      {player.foot === 'Right' && '🦶 Prawa'}
+                      {player.foot === 'Left' && '🦶 Lewa'}
+                      {player.foot === 'Both' && '🦶 Obie'}
+                    </span>
+                  )}
+                  {player.value && (
+                    <span className="flex items-center gap-0.5">
+                      💰 {player.value}
+                    </span>
+                  )}
+                </div>
               </div>
 
-              {/* Position badges z inteligentnym tooltipem */}
+              {/* Position badges */}
               <div className="flex gap-1 shrink-0">
                 {player.positions.slice(0, 2).map(pos => (
                   <span key={pos} className={`text-[9px] font-black px-1.5 py-0.5 rounded border ${positionBg[slotToCategory[pos] || 'MID']}`}>

@@ -3,9 +3,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { getAllSquads, saveMatchResult, updateSquadStats } from '../services/squadService';
 import CountryFlag from 'react-country-flag';
 import { getCountryCode } from '../utils/countryCodes';
+import { PREDEFINED_CATEGORIES } from '../data/predefinedCategories';
 
-export default function RefereeMode({ isOpen, onClose, currentUser }) {
-  const [step, setStep] = useState('loading');
+export default function RefereeMode({ isOpen, onClose, currentUser, userCategories }) {
+  const [step, setStep] = useState('loading'); // loading, selectCategory, select, compare, result
   const [availableSquads, setAvailableSquads] = useState([]);
   const [squad1, setSquad1] = useState(null);
   const [squad2, setSquad2] = useState(null);
@@ -13,6 +14,62 @@ export default function RefereeMode({ isOpen, onClose, currentUser }) {
   const [currentComparisonIndex, setCurrentComparisonIndex] = useState(0);
   const [scores, setScores] = useState({ squad1: 0, squad2: 0 });
   const [error, setError] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [filteredSquads, setFilteredSquads] = useState([]);
+
+
+  // Połącz kategorie podstawowe i użytkownika
+  const allCategories = [
+    ...PREDEFINED_CATEGORIES,
+    ...(userCategories || [])
+  ];
+
+  // ✅ Teraz console.log jest OK
+  console.log('allCategories:', allCategories);
+  console.log('step:', step);
+  
+  // Wybór kategorii
+  const handleSelectCategory = (category) => {
+    setSelectedCategory(category);
+    // Filtruj składy według kategorii
+    if (category.filter) {
+      const filtered = availableSquads.filter(squad => {
+        // Sprawdź czy skład spełnia warunki kategorii
+        const squadPlayers = Object.values(squad.squad || {});
+        if (squadPlayers.length === 0) return false;
+        // Sprawdź czy wszyscy zawodnicy spełniają warunek
+        return squadPlayers.every(player => category.filter(player));
+      });
+      setFilteredSquads(filtered);
+    } else {
+      setFilteredSquads(availableSquads);
+    }
+    setStep('select');
+  };
+
+  const randomizeSquads = () => {
+    if (filteredSquads.length < 2) {
+      setError(`Za mało składów spełniających kryteria kategorii "${selectedCategory?.name}"`);
+      setStep('selectCategory');
+      return;
+    }
+    
+    const shuffled = [...filteredSquads];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    setSquad1(shuffled[0]);
+    setSquad2(shuffled[1]);
+    prepareComparison(shuffled[0].squad, shuffled[1].squad);
+  };
+
+  const selectSpecificSquads = (s1, s2) => {
+    setSquad1(s1);
+    setSquad2(s2);
+    prepareComparison(s1.squad, s2.squad);
+  };
 
   // Hierarchia pozycji do elastycznego dopasowania
   const positionHierarchy = {
@@ -62,7 +119,7 @@ export default function RefereeMode({ isOpen, onClose, currentUser }) {
         setStep('error');
       } else {
         setAvailableSquads(otherSquads);
-        setStep('select');
+        setStep('selectCategory');
       }
     } catch (err) {
       setError('Nie udało się załadować składów');
@@ -76,29 +133,7 @@ export default function RefereeMode({ isOpen, onClose, currentUser }) {
     }
   }, [isOpen, loadSquads]);
 
-  const randomizeSquads = () => {
-  if (availableSquads.length < 2) return;
   
-  const shuffled = [...availableSquads];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  
-  // 🔍 DODAJ TE LOGI
-   console.log('=== LOSOWANIE SKŁADÓW ===');
-   console.log('Skład 1:', shuffled[0]);
-   console.log('Skład 1 ID:', shuffled[0].id);
-   console.log('Skład 1 name:', shuffled[0].name);
-   console.log('Skład 2:', shuffled[1]);
-   console.log('Skład 2 ID:', shuffled[1].id);
-   console.log('Skład 2 name:', shuffled[1].name);
-  
-    setSquad1(shuffled[0]);
-    setSquad2(shuffled[1]);
-   prepareComparison(shuffled[0].squad, shuffled[1].squad);
-  };
-
   // Główna funkcja porównująca
   const prepareComparison = (squadData1, squadData2) => {
     // Kopie składów
@@ -312,25 +347,120 @@ export default function RefereeMode({ isOpen, onClose, currentUser }) {
   };
 
   const reset = () => {
-    setStep('select');
-    setSquad1(null);
-    setSquad2(null);
-    setComparisons([]);
-    setScores({ squad1: 0, squad2: 0 });
-    setError('');
-    loadSquads();
-  };
+      setStep('selectCategory');
+      setSquad1(null);
+      setSquad2(null);
+      setComparisons([]);
+      setScores({ squad1: 0, squad2: 0 });
+      setError('');
+      setSelectedCategory(null);
+      loadSquads();
+    };
 
-  if (!isOpen) return null;
+    if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-[#0d1525] rounded-2xl w-full max-w-5xl max-h-[90vh] flex flex-col border border-white/10 m-4" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-white/10">
-          <h2 className="text-xl font-bold text-white">⚖️ Zostań sędzią</h2>
-          <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 flex items-center justify-center text-white/60 hover:text-white">✕</button>
-        </div>
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm" onClick={onClose}>
+        <div className="bg-[#0d1525] rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col border border-white/10 m-4" onClick={(e) => e.stopPropagation()}>
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-white/10">
+            <h2 className="text-xl font-bold text-white">⚖️ Zostań sędzią</h2>
+            <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-white/60">✕</button>
+          </div>
+
+          {/* Wybór kategorii */}
+          {step === 'selectCategory' && (
+            <div className="flex-1 overflow-y-auto p-4">
+              <h3 className="text-lg font-bold text-white mb-4">🎯 Wybierz kategorię</h3>
+              <div className="space-y-2">
+                {allCategories.map((cat, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => handleSelectCategory(cat)}
+                    className="bg-white/5 rounded-lg p-3 border border-white/10 hover:bg-white/10 cursor-pointer transition-all"
+                  >
+                    <p className="font-bold text-white">{cat.name}</p>
+                    <p className="text-xs text-white/40">
+                      {cat.isBase ? 'Kategoria podstawowa' : 'Twoja kategoria'}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Wybór składów (losowo lub ręcznie) */}
+          {step === 'select' && selectedCategory && (
+            <div className="flex-1 overflow-y-auto p-4">
+              <div className="mb-4">
+                <div className="bg-blue-500/20 rounded-lg p-3 mb-4">
+                  <p className="text-blue-400 text-sm">Wybrana kategoria: <strong>{selectedCategory.name}</strong></p>
+                  <p className="text-white/40 text-xs mt-1">Dostępnych składów: {filteredSquads.length}</p>
+                </div>
+                
+                <div className="flex gap-3 mb-6">
+                  <button
+                    onClick={randomizeSquads}
+                    disabled={filteredSquads.length < 2}
+                    className={`flex-1 py-3 rounded-xl font-bold text-lg transition-all ${
+                      filteredSquads.length >= 2
+                        ? 'bg-yellow-400 text-black hover:bg-yellow-500'
+                        : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    🎲 Losuj składy
+                  </button>
+                  <button
+                    onClick={() => setStep('selectCategory')}
+                    className="flex-1 py-3 bg-white/10 rounded-xl text-white hover:bg-white/20"
+                  >
+                    ← Zmień kategorię
+                  </button>
+                </div>
+                
+                <h3 className="text-sm font-bold text-white/60 mb-2">Lub wybierz ręcznie:</h3>
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {filteredSquads.map(squad => (
+                    <div key={squad.id} className="bg-white/5 rounded-lg p-3 border border-white/10">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="font-bold text-white">{squad.name}</p>
+                          <p className="text-xs text-white/40">
+                            {squad.author} • {squad.formation}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => {
+                              if (!squad1) {
+                                setSquad1(squad);
+                              } else if (!squad2 && squad.id !== squad1.id) {
+                                selectSpecificSquads(squad1, squad);
+                              } else if (squad.id !== squad1.id) {
+                                selectSpecificSquads(squad, squad2);
+                              }
+                            }}
+                            className="text-xs px-3 py-1 bg-yellow-400/20 text-yellow-400 rounded"
+                          >
+                            {!squad1 ? 'Wybierz jako 1' : squad1?.id === squad.id ? '✓ Wybrany 1' : !squad2 ? 'Wybierz jako 2' : squad2?.id === squad.id ? '✓ Wybrany 2' : 'Wybierz'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                {squad1 && squad2 && (
+                  <button
+                    onClick={() => prepareComparison(squad1.squad, squad2.squad)}
+                    className="w-full mt-4 py-2 bg-green-500 text-white rounded-lg font-bold"
+                  >
+                    Rozpocznij sędziowanie ⚽
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
 
         {/* Loading / Error / Select */}
         {step === 'loading' && (
@@ -380,56 +510,105 @@ export default function RefereeMode({ isOpen, onClose, currentUser }) {
 
             {/* Porównanie - układ lewy vs prawy */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                {/* Zawodnik 1 - lewa strona */}
-                <div 
-                  onClick={() => selectWinner('squad1')}
-                  className="bg-white/5 rounded-xl p-6 border-2 border-white/10 hover:border-yellow-400/50 hover:bg-white/10 transition-all cursor-pointer group"
-                >
-                      <div className="text-6xl mb-3 flex justify-center">
-                        <CountryFlag 
-                          countryCode={getCountryCode(comparisons[currentComparisonIndex].player1.country)} 
-                          svg 
-                          className="w-20 h-20 rounded-full object-cover" 
-                        />
-                      </div>
-                    <p className="font-bold text-white text-xl">{comparisons[currentComparisonIndex].player1.name}</p>
-                    <p className="text-sm text-white/40 mt-1">{comparisons[currentComparisonIndex].player1.country}</p>
-                    <p className="text-xs text-white/30">{comparisons[currentComparisonIndex].player1.club || comparisons[currentComparisonIndex].player1.country}</p>
-                    <div className="mt-3 inline-block px-3 py-1 bg-yellow-400/20 rounded-full text-xs text-yellow-400">
-                      {comparisons[currentComparisonIndex].position.split(' → ')[0]}
-                    </div>
+              {/* Zawodnik 1 - lewa strona */}
+              <div 
+                onClick={() => selectWinner('squad1')}
+                className="bg-white/5 rounded-xl p-6 border-2 border-white/10 hover:border-yellow-400/50 hover:bg-white/10 transition-all cursor-pointer group"
+              >
+                <div className="text-center">
+                  <div className="text-6xl mb-3 flex justify-center">
+                    <CountryFlag 
+                      countryCode={getCountryCode(comparisons[currentComparisonIndex].player1.country)} 
+                      svg 
+                      className="w-20 h-20 rounded-full object-cover" 
+                    />
                   </div>
-                  <div className="mt-4 text-center opacity-0 group-hover:opacity-100 transition-all">
-                    <span className="text-yellow-400 text-sm">👑 Kliknij aby wybrać</span>
+                  <p className="font-bold text-white text-xl">{comparisons[currentComparisonIndex].player1.name}</p>
+                  <p className="text-sm text-white/40 mt-1">{comparisons[currentComparisonIndex].player1.country}</p>
+                  <p className="text-xs text-white/30">{comparisons[currentComparisonIndex].player1.club || comparisons[currentComparisonIndex].player1.country}</p>
+                  
+                  {/* Dodatkowe dane zawodnika */}
+                  <div className="flex justify-center gap-3 mt-2 text-[10px] text-white/40">
+                    {comparisons[currentComparisonIndex].player1.age && (
+                      <span>🎂 {comparisons[currentComparisonIndex].player1.age} lat</span>
+                    )}
+                    {comparisons[currentComparisonIndex].player1.height && (
+                      <span>📏 {comparisons[currentComparisonIndex].player1.height} cm</span>
+                    )}
+                    {comparisons[currentComparisonIndex].player1.foot && (
+                      <span>
+                        {comparisons[currentComparisonIndex].player1.foot === 'Right' && '🦶 Prawa'}
+                        {comparisons[currentComparisonIndex].player1.foot === 'Left' && '🦶 Lewa'}
+                        {comparisons[currentComparisonIndex].player1.foot === 'Both' && '🦶 Obie'}
+                      </span>
+                    )}
+                  </div>
+                  {comparisons[currentComparisonIndex].player1.value && (
+                    <div className="mt-1 text-[10px] text-yellow-400/70">
+                      💰 {comparisons[currentComparisonIndex].player1.value}
+                    </div>
+                  )}
+                  
+                  <div className="mt-3 inline-block px-3 py-1 bg-yellow-400/20 rounded-full text-xs text-yellow-400">
+                    {comparisons[currentComparisonIndex].position.split(' → ')[0]}
                   </div>
                 </div>
+                <div className="mt-4 text-center opacity-0 group-hover:opacity-100 transition-all">
+                  <span className="text-yellow-400 text-sm">👑 Kliknij aby wybrać</span>
+                </div>
+              </div>
 
-                {/* Zawodnik 2 - prawa strona */}
-                <div 
-                  onClick={() => selectWinner('squad2')}
-                  className="bg-white/5 rounded-xl p-6 border-2 border-white/10 hover:border-yellow-400/50 hover:bg-white/10 transition-all cursor-pointer group"
-                >
-                  <div className="text-center">
-                    <div className="text-6xl mb-3 flex justify-center">
-                      <CountryFlag 
-                        countryCode={getCountryCode(comparisons[currentComparisonIndex].player2.country)} 
-                        svg 
-                        className="w-16 h-16 rounded-full object-cover" 
-                      />
-                    </div>
-                    <p className="font-bold text-white text-xl">{comparisons[currentComparisonIndex].player2.name}</p>
-                    <p className="text-sm text-white/40 mt-1">{comparisons[currentComparisonIndex].player2.country}</p>
-                    <p className="text-xs text-white/30">{comparisons[currentComparisonIndex].player2.club || comparisons[currentComparisonIndex].player2.country}</p>
-                    <div className="mt-3 inline-block px-3 py-1 bg-yellow-400/20 rounded-full text-xs text-yellow-400">
-                      {comparisons[currentComparisonIndex].position.split(' → ')[1] || comparisons[currentComparisonIndex].position}
-                    </div>
+              {/* Zawodnik 2 - prawa strona */}
+              <div 
+                onClick={() => selectWinner('squad2')}
+                className="bg-white/5 rounded-xl p-6 border-2 border-white/10 hover:border-yellow-400/50 hover:bg-white/10 transition-all cursor-pointer group"
+              >
+                <div className="text-center">
+                  <div className="text-6xl mb-3 flex justify-center">
+                    <CountryFlag 
+                      countryCode={getCountryCode(comparisons[currentComparisonIndex].player2.country)} 
+                      svg 
+                      className="w-20 h-20 rounded-full object-cover" 
+                    />
                   </div>
-                  <div className="mt-4 text-center opacity-0 group-hover:opacity-100 transition-all">
-                    <span className="text-yellow-400 text-sm">👑 Kliknij aby wybrać</span>
+                  <p className="font-bold text-white text-xl">{comparisons[currentComparisonIndex].player2.name}</p>
+                  <p className="text-sm text-white/40 mt-1">{comparisons[currentComparisonIndex].player2.country}</p>
+                  <p className="text-xs text-white/30">{comparisons[currentComparisonIndex].player2.club || comparisons[currentComparisonIndex].player2.country}</p>
+                  
+                  {/* Dodatkowe dane zawodnika */}
+                  <div className="flex justify-center gap-3 mt-2 text-[10px] text-white/40">
+                    {comparisons[currentComparisonIndex].player2.age && (
+                      <span>🎂 {comparisons[currentComparisonIndex].player2.age} lat</span>
+                    )}
+                    {comparisons[currentComparisonIndex].player2.height && (
+                      <span>📏 {comparisons[currentComparisonIndex].player2.height} cm</span>
+                    )}
+                    {comparisons[currentComparisonIndex].player2.foot && (
+                      <span>
+                        {comparisons[currentComparisonIndex].player2.foot === 'Right' && '🦶 Prawa'}
+                        {comparisons[currentComparisonIndex].player2.foot === 'Left' && '🦶 Lewa'}
+                        {comparisons[currentComparisonIndex].player2.foot === 'Both' && '🦶 Obie'}
+                      </span>
+                    )}
+                  </div>
+                  {comparisons[currentComparisonIndex].player2.value && (
+                    <div className="mt-1 text-[10px] text-yellow-400/70">
+                      💰 {comparisons[currentComparisonIndex].player2.value}
+                    </div>
+                  )}
+                  
+                  <div className="mt-3 inline-block px-3 py-1 bg-yellow-400/20 rounded-full text-xs text-yellow-400">
+                    {comparisons[currentComparisonIndex].position.split(' → ')[1] || comparisons[currentComparisonIndex].position}
                   </div>
                 </div>
+                <div className="mt-4 text-center opacity-0 group-hover:opacity-100 transition-all">
+                  <span className="text-yellow-400 text-sm">👑 Kliknij aby wybrać</span>
+                </div>
+              </div>
             </div>
+          </div>
         )}
+
 
         {/* Wynik końcowy */}
         {step === 'result' && (
