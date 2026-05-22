@@ -227,3 +227,107 @@ export const updateSquadStats = async (squadId, isWin, isDraw) => {
     throw error;
   }
 };
+
+// Zapisz kategorię do Firebase
+export const saveUserCategory = async (category) => {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error('Musisz być zalogowany aby zapisać kategorię');
+    }
+    
+    const categoryData = {
+      name: category.name,
+      filter: category.filter ? category.filter.toString() : null, // zapisujemy funkcję jako string
+      players: category.players || [],
+      conditions: category.conditions || [],
+      userId: user.uid,
+      userEmail: user.email,
+      userName: user.displayName || user.email,
+      createdAt: serverTimestamp(),
+      isBase: false
+    };
+    
+    const docRef = await addDoc(collection(db, 'categories'), categoryData);
+    console.log('Kategoria zapisana w Firebase, ID:', docRef.id);
+    return { id: docRef.id, ...categoryData };
+  } catch (error) {
+    console.error('Błąd zapisu kategorii:', error);
+    throw error;
+  }
+};
+
+// Pobierz kategorie zalogowanego użytkownika
+export const getUserCategories = async () => {
+  try {
+    const user = auth.currentUser;
+    if (!user) return [];
+    
+    const q = query(
+      collection(db, 'categories'),
+      where('userId', '==', user.uid),
+      orderBy('createdAt', 'desc')
+    );
+    const snapshot = await getDocs(q);
+    const categories = [];
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      // Przywróć funkcję filtra z stringa
+      let filter = null;
+      if (data.filter && typeof data.filter === 'string') {
+        try {
+          // eslint-disable-next-line no-new-func
+          filter = new Function('return ' + data.filter)();
+        } catch (e) {
+          console.error('Błąd parsowania filtra:', e);
+        }
+      }
+      categories.push({
+        id: doc.id,
+        ...data,
+        filter: filter,
+        createdAt: data.createdAt?.toDate?.() || new Date(data.createdAt)
+      });
+    });
+    return categories;
+  } catch (error) {
+    console.error('Błąd pobierania kategorii:', error);
+    return [];
+  }
+};
+
+// Pobierz wszystkie publiczne kategorie (opcjonalnie - dla admina)
+export const getAllCategories = async () => {
+  try {
+    const q = query(
+      collection(db, 'categories'),
+      orderBy('createdAt', 'desc'),
+      limit(100)
+    );
+    const snapshot = await getDocs(q);
+    const categories = [];
+    snapshot.forEach((doc) => {
+      categories.push({ id: doc.id, ...doc.data() });
+    });
+    return categories;
+  } catch (error) {
+    console.error('Błąd pobierania wszystkich kategorii:', error);
+    return [];
+  }
+};
+
+// Usuń kategorię (tylko własną)
+export const deleteUserCategory = async (categoryId, userId) => {
+  try {
+    const user = auth.currentUser;
+    if (!user) throw new Error('Musisz być zalogowany');
+    if (userId !== user.uid) throw new Error('Możesz usuwać tylko swoje kategorie');
+    
+    await deleteDoc(doc(db, 'categories', categoryId));
+    console.log('Kategoria usunięta:', categoryId);
+    return true;
+  } catch (error) {
+    console.error('Błąd usuwania kategorii:', error);
+    throw error;
+  }
+};

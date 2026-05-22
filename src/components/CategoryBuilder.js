@@ -1,13 +1,14 @@
 // src/components/CategoryBuilder.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { PLAYERS } from '../data/players';
+import { saveUserCategory } from '../services/squadService';
 
 export default function CategoryBuilder({ onSaveCategory, onClose }) {
   const [categoryName, setCategoryName] = useState('');
   const [conditions, setConditions] = useState([]);
-  const [filteredPlayers, setFilteredPlayers] = useState([]);
-  const [selectedPlayers, setSelectedPlayers] = useState([]);
+  const [previewPlayers, setPreviewPlayers] = useState([]);
   const [error, setError] = useState('');
+  const [saving, setSaving] = useState(false);
   const [conditionTypes] = useState([
     { id: 'age_max', label: 'Wiek ≤', type: 'number', unit: 'lat' },
     { id: 'age_min', label: 'Wiek ≥', type: 'number', unit: 'lat' },
@@ -24,6 +25,7 @@ export default function CategoryBuilder({ onSaveCategory, onClose }) {
   const extractLeague = (club) => {
     const leagues = {
       'Liverpool': 'Premier League', 'Manchester City': 'Premier League', 'Arsenal': 'Premier League',
+      'Chelsea': 'Premier League', 'Manchester United': 'Premier League', 'Tottenham': 'Premier League',
       'Real Madryt': 'La Liga', 'Barcelona': 'La Liga', 'Atletico Madryt': 'La Liga',
       'Bayern Monachium': 'Bundesliga', 'Borussia Dortmund': 'Bundesliga',
       'PSG': 'Ligue 1', 'AC Milan': 'Serie A', 'Inter Mediolan': 'Serie A', 'Juventus': 'Serie A'
@@ -36,7 +38,6 @@ export default function CategoryBuilder({ onSaveCategory, onClose }) {
     const leagues = [...new Set(PLAYERS.map(p => extractLeague(p.club)))].filter(Boolean);
     const countries = [...new Set(PLAYERS.map(p => p.country))].filter(Boolean);
     
-    // Aktualizuj conditionTypes z opcjami - to jest OK, nie trzeba używać zmiennej
     conditionTypes.forEach(c => {
       if (c.id === 'league') c.options = leagues;
       if (c.id === 'country') c.options = countries;
@@ -46,7 +47,7 @@ export default function CategoryBuilder({ onSaveCategory, onClose }) {
 
   // Dodaj warunek
   const addCondition = () => {
-    setConditions([...conditions, { id: Date.now(), type: 'age_max', value: '', operator: '<=' }]);
+    setConditions([...conditions, { id: Date.now(), type: 'age_max', value: '' }]);
   };
 
   // Usuń warunek
@@ -61,11 +62,13 @@ export default function CategoryBuilder({ onSaveCategory, onClose }) {
     ));
   };
 
-  // Filtruj zawodników
-  const applyFilters = () => {
+  // Oblicz podgląd (ilu zawodników spełnia warunki)
+  const updatePreview = useCallback(() => {
     let filtered = [...PLAYERS];
     
     conditions.forEach(cond => {
+      if (!cond.value) return;
+      
       switch(cond.type) {
         case 'age_max':
           filtered = filtered.filter(p => (p.age || 0) <= parseFloat(cond.value));
@@ -88,64 +91,101 @@ export default function CategoryBuilder({ onSaveCategory, onClose }) {
         case 'position':
           filtered = filtered.filter(p => p.primaryPosition === cond.value);
           break;
+        case 'league':
+          filtered = filtered.filter(p => extractLeague(p.club) === cond.value);
+          break;
         default:
-          // domyślnie nie filtruj
           break;
       }
     });
     
-    setFilteredPlayers(filtered);
-    return filtered;
-  };
+    setPreviewPlayers(filtered);
+  }, [conditions]);
 
-  // Wybierz najlepszą jedenastkę
-  const selectBestEleven = () => {
-    const filtered = applyFilters();
-    
-    // Wybierz najlepszych według wartości rynkowej
-    const sorted = [...filtered].sort((a, b) => {
-      const valA = parseFloat(a.value) || 0;
-      const valB = parseFloat(b.value) || 0;
-      return valB - valA;
-    });
-    
-    // Podział na pozycje
-    const gk = sorted.filter(p => p.primaryPosition === 'GK').slice(0, 1);
-    const def = sorted.filter(p => p.primaryPosition === 'DEF').slice(0, 4);
-    const mid = sorted.filter(p => p.primaryPosition === 'MID').slice(0, 4);
-    const fwd = sorted.filter(p => p.primaryPosition === 'FWD').slice(0, 2);
-    
-    const best11 = [...gk, ...def, ...mid, ...fwd];
-    setSelectedPlayers(best11);
-  };
+  // Aktualizuj podgląd przy zmianie warunków
+  useEffect(() => {
+    updatePreview();
+  }, [updatePreview]);
 
-  const handleSave = () => {
+  // Zbuduj funkcję filtra na podstawie warunków
+  const buildFilterFunction = useCallback(() => {
+    return (player) => {
+      for (const cond of conditions) {
+        if (!cond.value) continue;
+        
+        switch(cond.type) {
+          case 'age_max':
+            if ((player.age || 0) > parseFloat(cond.value)) return false;
+            break;
+          case 'age_min':
+            if ((player.age || 0) < parseFloat(cond.value)) return false;
+            break;
+          case 'height_max':
+            if ((player.height || 0) > parseFloat(cond.value)) return false;
+            break;
+          case 'height_min':
+            if ((player.height || 0) < parseFloat(cond.value)) return false;
+            break;
+          case 'foot':
+            if (player.foot !== cond.value) return false;
+            break;
+          case 'country':
+            if (player.country !== cond.value) return false;
+            break;
+          case 'position':
+            if (player.primaryPosition !== cond.value) return false;
+            break;
+          case 'league':
+            if (extractLeague(player.club) !== cond.value) return false;
+            break;
+          default:
+            break;
+        }
+      }
+      return true;
+    };
+  }, [conditions]);
+
+  // ZAPIS DO FIREBASE
+  const handleSave = async () => {
     if (!categoryName.trim()) {
       setError('Podaj nazwę kategorii');
       return;
     }
-    if (selectedPlayers.length === 0) {
-      setError('Najpierw wybierz zawodników');
+    if (conditions.length === 0) {
+      setError('Dodaj przynajmniej jeden warunek');
       return;
     }
     
-    onSaveCategory({
-      name: categoryName,
-      players: selectedPlayers,
-      conditions: conditions,
-      createdAt: new Date().toISOString()
-    });
-    onClose();
+    setSaving(true);
+    setError('');
+    
+    try {
+      const filterFunction = buildFilterFunction();
+      
+      const newCategory = {
+        name: categoryName,
+        filter: filterFunction.toString(),
+        conditions: conditions,
+        createdAt: new Date().toISOString()
+      };
+      
+      await saveUserCategory(newCategory);
+      onSaveCategory(newCategory);
+      onClose();
+    } catch (error) {
+      setError('Błąd zapisu: ' + error.message);
+    }
+    setSaving(false);
   };
 
-  // Pobierz typ warunku po ID
   const getConditionType = (typeId) => {
     return conditionTypes.find(t => t.id === typeId);
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="bg-[#0d1525] rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col border border-white/10 m-4">
+      <div className="bg-[#0d1525] rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-white/10 m-4">
         <div className="flex items-center justify-between p-4 border-b border-white/10">
           <h2 className="text-xl font-bold text-white">🏆 Tworzenie kategorii</h2>
           <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-white/60">✕</button>
@@ -216,26 +256,16 @@ export default function CategoryBuilder({ onSaveCategory, onClose }) {
               })}
             </div>
             {conditions.length === 0 && (
-              <p className="text-white/30 text-xs text-center py-4">Dodaj warunki, aby filtrować zawodników</p>
+              <p className="text-white/30 text-xs text-center py-4">Dodaj warunki, aby zdefiniować kategorię</p>
             )}
           </div>
 
-          {/* Przyciski akcji */}
-          <div className="flex gap-2 mb-4">
-            <button onClick={applyFilters} className="flex-1 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30">
-              🔍 Pokaż pasujących zawodników
-            </button>
-            <button onClick={selectBestEleven} className="flex-1 py-2 bg-yellow-400/20 text-yellow-400 rounded-lg hover:bg-yellow-400/30">
-              ⭐ Wybierz najlepszą 11
-            </button>
-          </div>
-
-          {/* Lista pasujących zawodników */}
-          {filteredPlayers.length > 0 && (
+          {/* Podgląd */}
+          {conditions.length > 0 && (
             <div className="mb-4">
-              <h3 className="text-sm font-bold text-white/60 mb-2">Pasujący zawodnicy ({filteredPlayers.length})</h3>
-              <div className="max-h-40 overflow-y-auto space-y-1 bg-white/5 rounded-lg p-2">
-                {filteredPlayers.slice(0, 20).map(p => (
+              <h3 className="text-sm font-bold text-white/60 mb-2">Podgląd: pasujący zawodnicy ({previewPlayers.length})</h3>
+              <div className="max-h-32 overflow-y-auto space-y-1 bg-white/5 rounded-lg p-2">
+                {previewPlayers.slice(0, 10).map(p => (
                   <div key={p.id} className="flex items-center gap-2 text-xs">
                     <span>{p.flag}</span>
                     <span className="text-white">{p.name}</span>
@@ -244,23 +274,7 @@ export default function CategoryBuilder({ onSaveCategory, onClose }) {
                     <span className="text-yellow-400/70">{p.value}</span>
                   </div>
                 ))}
-                {filteredPlayers.length > 20 && <p className="text-white/30 text-xs">... i {filteredPlayers.length - 20} więcej</p>}
-              </div>
-            </div>
-          )}
-
-          {/* Wybrana jedenastka */}
-          {selectedPlayers.length > 0 && (
-            <div>
-              <h3 className="text-sm font-bold text-white/60 mb-2">Wybrana jedenastka ({selectedPlayers.length}/11)</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {selectedPlayers.map(p => (
-                  <div key={p.id} className="bg-white/5 rounded-lg p-2 text-center">
-                    <span className="text-2xl">{p.flag}</span>
-                    <p className="text-xs font-bold text-white">{p.name}</p>
-                    <p className="text-[10px] text-white/40">{p.primaryPosition}</p>
-                  </div>
-                ))}
+                {previewPlayers.length > 10 && <p className="text-white/30 text-xs">... i {previewPlayers.length - 10} więcej</p>}
               </div>
             </div>
           )}
@@ -270,7 +284,9 @@ export default function CategoryBuilder({ onSaveCategory, onClose }) {
 
         <div className="flex gap-3 p-4 border-t border-white/10">
           <button onClick={onClose} className="flex-1 py-2 bg-white/10 rounded-lg text-white">Anuluj</button>
-          <button onClick={handleSave} className="flex-1 py-2 bg-green-500 text-white rounded-lg font-bold">💾 Zapisz kategorię</button>
+          <button onClick={handleSave} disabled={saving || conditions.length === 0} className="flex-1 py-2 bg-green-500 text-white rounded-lg font-bold disabled:opacity-50">
+            {saving ? 'Zapisywanie...' : '💾 Zapisz kategorię'}
+          </button>
         </div>
       </div>
     </div>

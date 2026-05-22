@@ -16,6 +16,7 @@ import TeamSelect from './components/TeamSelect';
 import CategoryBuilder from './components/CategoryBuilder';
 import { PREDEFINED_CATEGORIES } from './data/predefinedCategories';
 import CategoriesList from './components/CategoriesList';
+import { getUserCategories } from './services/squadService';
 
 const STORAGE_KEY = 'wc_squad_builder';
 
@@ -44,59 +45,49 @@ export default function App() {
   const [categoryFilter, setCategoryFilter] = useState(null);
   const [userCategories, setUserCategories] = useState([]); // kategorie użytkownika
   const [categoriesMode, setCategoriesMode] = useState('predefined'); // 'predefined' lub 'my'
+  const [userCategories, setUserCategories] = useState([]);
 
 
-// Funkcja do zapisywania kategorii użytkownika
-const handleSaveUserCategory = (category) => {
-  const newCategory = {
-    ...category,
-    id: Date.now(),
-    userId: currentUser?.uid,
-    createdAt: new Date().toISOString(),
-    isBase: false
-  };
-  
-  const updated = [...userCategories, newCategory];
-  setUserCategories(updated);
-  localStorage.setItem(`wc_categories_${currentUser?.uid}`, JSON.stringify(updated));
-  setShowCategoryBuilder(false);
-};
-
-// Funkcja wyboru kategorii
-const handleSelectCategory = (category) => {
-  setSelectedCategory(category);
-  setCategoryFilter(() => category.filter);
-  setShowCategoriesList(false);
-};
-
-  const handleLoadCategory = (players) => {
-    // Tutaj logika wczytania składu
-    console.log('Wczytuję skład:', players);
-    // Możesz dodać funkcję do ustawiania składu na boisku
-  };
-
-
-  // Wczytaj kategorie użytkownika z Firebase (lub localStorage)
-  useEffect(() => {
+  {/* / Funkcja do ładowania kategorii z Firebase */}
+  const loadUserCategories = useCallback(async () => {
     if (currentUser) {
-      // Kategorie użytkownika zapisane w Firebase lub localStorage
-      const saved = localStorage.getItem(`wc_categories_${currentUser.uid}`);
-      if (saved) {
-        setUserCategories(JSON.parse(saved));
+      try {
+        const categories = await getUserCategories();
+        setUserCategories(categories);
+        console.log('Załadowano kategorie z Firebase:', categories.length);
+      } catch (error) {
+        console.error('Błąd ładowania kategorii:', error);
+        setUserCategories([]);
       }
+    } else {
+      setUserCategories([]);
     }
   }, [currentUser]);
 
-    // Wczytanie kategorii przy starcie
+  {/* Funkcja do zapisywania nowej kategorii (wywoływana przez CategoryBuilder) */}
+  const handleSaveUserCategory = (category) => {
+    // Kategoria została już zapisana w Firebase przez CategoryBuilder
+    // Tu tylko odświeżamy listę
+    loadUserCategories();
+    setShowCategoryBuilder(false);
+  };
+
+  {/* Funkcja wyboru kategorii (do filtrowania) */}
+  const handleSelectCategory = (category) => {
+    setSelectedCategory(category);
+    setCategoryFilter(() => category.filter);
+    setShowCategoriesList(false);
+  };
+
+  // Wywołaj ładowanie kategorii po zalogowaniu
   useEffect(() => {
-    const saved = localStorage.getItem('wc_categories');
-    if (saved) {
-      setSavedCategories(JSON.parse(saved));
-    } else {
-      // Jeśli brak kategorii, dodaj predefiniowane
-      setSavedCategories(PREDEFINED_CATEGORIES);
-      localStorage.setItem('wc_categories', JSON.stringify(PREDEFINED_CATEGORIES));
-    }
+    loadUserCategories();
+  }, [loadUserCategories]);
+
+  {/* Predefiniowane kategorie - ładujemy raz na starcie */}
+  useEffect(() => {
+    // Predefiniowane kategorie są w pliku, nie potrzebują localStorage
+    setSavedCategories(PREDEFINED_CATEGORIES);
   }, []);
 
 
