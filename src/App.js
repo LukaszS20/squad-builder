@@ -1,6 +1,6 @@
 // App.js
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Pitch from './components/Pitch';
 import PlayerSelector from './components/PlayerSelector';
 import StatsPanel from './components/StatsPanel';
@@ -17,6 +17,7 @@ import CategoryBuilder from './components/CategoryBuilder';
 import { PREDEFINED_CATEGORIES } from './data/predefinedCategories';
 import CategoriesList from './components/CategoriesList';
 import { getUserCategories } from './services/squadService';
+import WelcomeSlider from './components/WelcomeSlider';
 
 const STORAGE_KEY = 'wc_squad_builder';
 
@@ -45,10 +46,10 @@ export default function App() {
   const [categoryFilter, setCategoryFilter] = useState(null);
   const [userCategories, setUserCategories] = useState([]); // kategorie użytkownika
   const [categoriesMode, setCategoriesMode] = useState('predefined'); // 'predefined' lub 'my'
-  const [userCategories, setUserCategories] = useState([]);
+  const [showWelcome, setShowWelcome] = useState(false);
 
 
-  {/* / Funkcja do ładowania kategorii z Firebase */}
+  // Funkcja do ładowania kategorii z Firebase
   const loadUserCategories = useCallback(async () => {
     if (currentUser) {
       try {
@@ -64,27 +65,39 @@ export default function App() {
     }
   }, [currentUser]);
 
-  {/* Funkcja do zapisywania nowej kategorii (wywoływana przez CategoryBuilder) */}
+  // Funkcja do wczytywania składu z kategorii 
+  const handleLoadCategory = (players) => {
+    console.log('Wczytuję skład z kategorii:', players);
+  };
+
+  // Funkcja do zapisywania nowej kategorii (wywoływana przez CategoryBuilder)
   const handleSaveUserCategory = (category) => {
-    // Kategoria została już zapisana w Firebase przez CategoryBuilder
-    // Tu tylko odświeżamy listę
     loadUserCategories();
     setShowCategoryBuilder(false);
   };
 
-  {/* Funkcja wyboru kategorii (do filtrowania) */}
+  // Funkcja wyboru kategorii (do filtrowania)
   const handleSelectCategory = (category) => {
     setSelectedCategory(category);
     setCategoryFilter(() => category.filter);
     setShowCategoriesList(false);
   };
 
+// Sprawdź czy użytkownik już widział powitanie
+useEffect(() => {
+  const hasSeenWelcome = localStorage.getItem('wc_welcome_seen');
+  if (!hasSeenWelcome) {
+    // Małe opóźnienie żeby strona się załadowała
+    setTimeout(() => setShowWelcome(true), 500);
+  }
+}, []);
+
   // Wywołaj ładowanie kategorii po zalogowaniu
   useEffect(() => {
     loadUserCategories();
   }, [loadUserCategories]);
 
-  {/* Predefiniowane kategorie - ładujemy raz na starcie */}
+  // Predefiniowane kategorie - ładujemy raz na starcie
   useEffect(() => {
     // Predefiniowane kategorie są w pliku, nie potrzebują localStorage
     setSavedCategories(PREDEFINED_CATEGORIES);
@@ -446,6 +459,11 @@ export default function App() {
           onStartGame={handleStartGame}
           onBack={() => setGameStep(null)}
         />
+      )}
+
+      {/* Modal powitalny */}
+      {showWelcome && (
+        <WelcomeSlider onClose={() => setShowWelcome(false)} />
       )}
 
       {/* Ekran gry */}

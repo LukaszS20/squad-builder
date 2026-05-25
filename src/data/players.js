@@ -645,6 +645,81 @@ const getLocalPlayers = () => {
 { id: 466, name: 'Petar Musa', positions: ['ST'], primaryPosition: 'FWD', country: 'Chorwacja', flag: '🇭🇷', image: null, club: 'FC Dallas', age: 27, height: 188, foot: 'Right', value: '12m €' },
 { id: 467, name: 'Igor Matanović', positions: ['ST'], primaryPosition: 'FWD', country: 'Chorwacja', flag: '🇭🇷', image: null, club: 'SC Freiburg', age: 22, height: 194, foot: 'Right', value: '8m €' },
 
+
+// ==================== SZWAJCARIA ====================
+
+// Bramkarze
+{ id: 468, name: 'Gregor Kobel', positions: ['GK'], primaryPosition: 'GK', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Borussia Dortmund', age: 28, height: 195, foot: 'Right', value: '40m €' },
+{ id: 469, name: 'Yvon Mvogo', positions: ['GK'], primaryPosition: 'GK', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'FC Lorient', age: 31, height: 189, foot: 'Right', value: '3m €' },
+
+// Obrońcy
+{ id: 470, name: 'Manuel Akanji', positions: ['CB'], primaryPosition: 'DEF', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Inter Milan', age: 30, height: 188, foot: 'Right', value: '18m €' },
+{ id: 471, name: 'Luca Jaquez', positions: ['CB'], primaryPosition: 'DEF', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'VfB Stuttgart', age: 22, height: 187, foot: 'Left', value: '10m €' },
+{ id: 472, name: 'Nico Elvedi', positions: ['CB'], primaryPosition: 'DEF', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Borussia Mönchengladbach', age: 29, height: 189, foot: 'Right', value: '8m €' },
+{ id: 473, name: 'Aurèle Amenda', positions: ['CB'], primaryPosition: 'DEF', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Eintracht Frankfurt', age: 22, height: 197, foot: 'Left', value: '8m €' },
+{ id: 474, name: 'Eray Cömert', positions: ['CB'], primaryPosition: 'DEF', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Valencia CF', age: 28, height: 183, foot: 'Right', value: '2.5m €' },
+{ id: 475, name: 'Miro Muheim', positions: ['LB'], primaryPosition: 'DEF', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Hamburger SV', age: 28, height: 182, foot: 'Left', value: '5m €' },
+{ id: 476, name: 'Ricardo Rodríguez', positions: ['LB'], primaryPosition: 'DEF', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Real Betis Balompié', age: 33, height: 180, foot: 'Left', value: '1.5m €' },
+{ id: 477, name: 'Silvan Widmer', positions: ['RB'], primaryPosition: 'DEF', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: '1.FSV Mainz 05', age: 33, height: 183, foot: 'Right', value: '0.8m €' },
+
+// Pomocnicy
+{ id: 478, name: 'Ardon Jashari', positions: ['CDM'], primaryPosition: 'MID', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'AC Milan', age: 23, height: 181, foot: 'Left', value: '30m €' },
+{ id: 479, name: 'Denis Zakaria', positions: ['CDM'], primaryPosition: 'MID', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'AS Monaco', age: 29, height: 191, foot: 'Right', value: '25m €' },
+{ id: 480, name: 'Granit Xhaka', positions: ['CDM', 'CM'], primaryPosition: 'MID', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Sunderland AFC', age: 33, height: 186, foot: 'Left', value: '10m €' },
+{ id: 481, name: 'Johan Manzambi', positions: ['CM'], primaryPosition: 'MID', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'SC Freiburg', age: 20, height: 184, foot: 'Right', value: '35m €' },
+{ id: 482, name: 'Djibril Sow', positions: ['CM'], primaryPosition: 'MID', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Sevilla FC', age: 29, height: 184, foot: 'Right', value: '7.5m €' },
+{ id: 483, name: 'Michel Aebischer', positions: ['CM'], primaryPosition: 'MID', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Pisa Sporting Club', age: 29, height: 183, foot: 'Left', value: '4.5m €' },
+{ id: 484, name: 'Remo Freuler', positions: ['CM'], primaryPosition: 'MID', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Bologna FC 1909', age: 34, height: 181, foot: 'Right', value: '4m €' },
+{ id: 485, name: 'Fabian Rieder', positions: ['CAM'], primaryPosition: 'MID', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'FC Augsburg', age: 24, height: 179, foot: 'Left', value: '8m €' },
+
+// Napastnicy
+{ id: 486, name: 'Noah Okafor', positions: ['LW'], primaryPosition: 'FWD', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Leeds United', age: 26, height: 185, foot: 'Right', value: '18m €' },
+{ id: 487, name: 'Rubén Vargas', positions: ['LW'], primaryPosition: 'FWD', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Sevilla FC', age: 27, height: 179, foot: 'Right', value: '12m €' },
+{ id: 488, name: 'Dan Ndoye', positions: ['RW'], primaryPosition: 'FWD', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Nottingham Forest', age: 25, height: 184, foot: 'Right', value: '35m €' },
+{ id: 489, name: 'Breel Embolo', positions: ['ST'], primaryPosition: 'FWD', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Stade Rennais FC', age: 29, height: 187, foot: 'Right', value: '12m €' },
+{ id: 490, name: 'Zeki Amdouni', positions: ['ST'], primaryPosition: 'FWD', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Burnley FC', age: 25, height: 185, foot: 'Right', value: '9m €' },
+{ id: 491, name: 'Cedric Itten', positions: ['ST'], primaryPosition: 'FWD', country: 'Szwajcaria', flag: '🇨🇭', image: null, club: 'Fortuna Düsseldorf', age: 29, height: 189, foot: 'Right', value: '1.8m €' },
+
+
+// ==================== SENEGAL ====================
+
+// Bramkarze
+{ id: 492, name: 'Yehvann Diouf', positions: ['GK'], primaryPosition: 'GK', country: 'Senegal', flag: '🇸🇳', image: null, club: 'OGC Nice', age: 26, height: 184, foot: 'Right', value: '7m €' },
+{ id: 493, name: 'Edouard Mendy', positions: ['GK'], primaryPosition: 'GK', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Al-Ahli SFC', age: 34, height: 197, foot: 'Right', value: '4.5m €' },
+{ id: 494, name: 'Mory Diaw', positions: ['GK'], primaryPosition: 'GK', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Le Havre AC', age: 32, height: 197, foot: 'Right', value: '1m €' },
+
+// Obrońcy
+{ id: 495, name: 'Mamadou Sarr', positions: ['CB'], primaryPosition: 'DEF', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Chelsea FC', age: 20, height: 194, foot: 'Right', value: '25m €' },
+{ id: 496, name: 'Moussa Niakhaté', positions: ['CB'], primaryPosition: 'DEF', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Olympique Lyon', age: 30, height: 190, foot: 'Left', value: '18m €' },
+{ id: 497, name: 'Moustapha Mbow', positions: ['CB'], primaryPosition: 'DEF', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Paris FC', age: 26, height: 195, foot: 'Right', value: '6m €' },
+{ id: 498, name: 'Antoine Mendy', positions: ['CB', 'RB'], primaryPosition: 'DEF', country: 'Senegal', flag: '🇸🇳', image: null, club: 'OGC Nice', age: 21, height: 187, foot: 'Right', value: '6m €' },
+{ id: 499, name: 'Kalidou Koulibaly', positions: ['CB'], primaryPosition: 'DEF', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Al-Hilal SFC', age: 34, height: 186, foot: 'Right', value: '5m €' },
+{ id: 500, name: 'Abdoulaye Seck', positions: ['CB'], primaryPosition: 'DEF', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Maccabi Haifa', age: 33, height: 191, foot: 'Right', value: '0.5m €' },
+{ id: 501, name: 'El Hadji Malick Diouf', positions: ['LB'], primaryPosition: 'DEF', country: 'Senegal', flag: '🇸🇳', image: null, club: 'West Ham United', age: 21, height: 183, foot: 'Left', value: '28m €' },
+{ id: 502, name: 'Ismail Jakobs', positions: ['LB'], primaryPosition: 'DEF', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Galatasaray', age: 26, height: 184, foot: 'Left', value: '8m €' },
+{ id: 503, name: 'Ilay Camara', positions: ['RB', 'RWB'], primaryPosition: 'DEF', country: 'Senegal', flag: '🇸🇳', image: null, club: 'RSC Anderlecht', age: 23, height: 183, foot: 'Right', value: '4m €' },
+
+// Pomocnicy
+{ id: 504, name: 'Idrissa Gueye', positions: ['CDM'], primaryPosition: 'MID', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Everton FC', age: 36, height: 174, foot: 'Right', value: '1m €' },
+{ id: 505, name: 'Pape Gueye', positions: ['CM'], primaryPosition: 'MID', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Villarreal CF', age: 27, height: 189, foot: 'Left', value: '40m €' },
+{ id: 506, name: 'Lamine Camara', positions: ['CM'], primaryPosition: 'MID', country: 'Senegal', flag: '🇸🇳', image: null, club: 'AS Monaco', age: 22, height: 173, foot: 'Right', value: '35m €' },
+{ id: 507, name: 'Pape Matar Sarr', positions: ['CM'], primaryPosition: 'MID', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Tottenham Hotspur', age: 23, height: 185, foot: 'Right', value: '32m €' },
+{ id: 508, name: 'Habib Diarra', positions: ['CM'], primaryPosition: 'MID', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Sunderland AFC', age: 22, height: 179, foot: 'Right', value: '32m €' },
+{ id: 509, name: 'Pathé Ciss', positions: ['CM'], primaryPosition: 'MID', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Rayo Vallecano', age: 32, height: 186, foot: 'Right', value: '2m €' },
+{ id: 510, name: 'Bara Sapoko Ndiaye', positions: ['CM'], primaryPosition: 'MID', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Bayern Munich', age: 18, height: 180, foot: 'Right', value: '0.3m €' },
+{ id: 511, name: 'Krépin Diatta', positions: ['RM', 'RW'], primaryPosition: 'MID', country: 'Senegal', flag: '🇸🇳', image: null, club: 'AS Monaco', age: 27, height: 175, foot: 'Right', value: '6m €' },
+
+// Napastnicy
+{ id: 512, name: 'Assane Diao', positions: ['LW'], primaryPosition: 'FWD', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Como 1907', age: 20, height: 185, foot: 'Right', value: '30m €' },
+{ id: 513, name: 'Sadio Mané', positions: ['LW'], primaryPosition: 'FWD', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Al-Nassr FC', age: 34, height: 175, foot: 'Right', value: '7m €' },
+{ id: 514, name: 'Iliman Ndiaye', positions: ['RW'], primaryPosition: 'FWD', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Everton FC', age: 26, height: 180, foot: 'Right', value: '50m €' },
+{ id: 515, name: 'Ismaïla Sarr', positions: ['RW'], primaryPosition: 'FWD', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Crystal Palace', age: 28, height: 185, foot: 'Right', value: '35m €' },
+{ id: 516, name: 'Ibrahim Mbaye', positions: ['RW'], primaryPosition: 'FWD', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Paris Saint-Germain', age: 18, height: 183, foot: 'Left', value: '30m €' },
+{ id: 517, name: 'Nicolas Jackson', positions: ['ST'], primaryPosition: 'FWD', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Bayern Munich', age: 24, height: 186, foot: 'Right', value: '40m €' },
+{ id: 518, name: 'Bamba Dieng', positions: ['ST'], primaryPosition: 'FWD', country: 'Senegal', flag: '🇸🇳', image: null, club: 'FC Lorient', age: 26, height: 178, foot: 'Right', value: '6m €' },
+{ id: 519, name: 'Cherif Ndiaye', positions: ['ST'], primaryPosition: 'FWD', country: 'Senegal', flag: '🇸🇳', image: null, club: 'Samsunspor', age: 30, height: 190, foot: 'Right', value: '5m €' },
+
+
 ];
 };
 
